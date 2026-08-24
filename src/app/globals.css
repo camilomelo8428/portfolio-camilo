@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #eef2f5;
+  --bg-deep: #e2e8ef;
+  --ink: #0c1b24;
+  --ink-muted: #3d5260;
+  --steel: #1a5f7a;
+  --steel-dark: #0f3d52;
+  --accent: #c45c26;
+  --line: #c5d0da;
+  --surface: #f7f9fb;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-deep: var(--bg-deep);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-steel: var(--steel);
+  --color-steel-dark: var(--steel-dark);
+  --color-accent: var(--accent);
+  --color-line: var(--line);
+  --color-surface: var(--surface);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+.site-grid {
+  background-image:
+    linear-gradient(180deg, rgba(26, 95, 122, 0.06) 0%, transparent 42%),
+    radial-gradient(ellipse 80% 50% at 100% 0%, rgba(196, 92, 38, 0.08), transparent 55%),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 47px,
+      rgba(12, 27, 36, 0.03) 47px,
+      rgba(12, 27, 36, 0.03) 48px
+    );
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes draw-line {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.anim-rise {
+  animation: rise 0.7s ease-out both;
+}
+
+.anim-rise-delay {
+  animation: rise 0.7s ease-out 0.15s both;
+}
+
+.anim-rise-delay-2 {
+  animation: rise 0.7s ease-out 0.3s both;
+}
+
+.anim-line {
+  transform-origin: left;
+  animation: draw-line 0.9s ease-out 0.2s both;
+}
