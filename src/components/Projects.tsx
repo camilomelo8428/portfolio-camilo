@@ -66,6 +66,17 @@ export function Projects() {
                           <p className="mt-2 text-sm text-steel">
                             {t.projects.productionLabel}: {project.production}
                           </p>
+                          {project.href ? (
+                            <a
+                              href={project.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-steel underline-offset-4 hover:underline"
+                              onClick={(event) => event.stopPropagation()}
+                            >
+                              {t.projects.codeLinkLabel} ↗
+                            </a>
+                          ) : null}
                         </div>
                         <p className="mt-5 text-xs text-ink-muted">
                           {t.projects.closeHint}

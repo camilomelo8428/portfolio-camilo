@@ -46,12 +46,14 @@ export type Dictionary = {
     closeHint: string;
     stackLabel: string;
     productionLabel: string;
+    codeLinkLabel: string;
     items: {
       name: string;
       summary: string;
       stack: string;
       production: string;
       highlights: string[];
+      href?: string;
     }[];
   };
   experience: {
@@ -209,6 +211,7 @@ const pt: Dictionary = {
     closeHint: "Clique novamente para ocultar",
     stackLabel: "Stack",
     productionLabel: "Produção",
+    codeLinkLabel: "Ver código",
     items: [
       {
         name: "Sensores AMASA",
@@ -216,6 +219,7 @@ const pt: Dictionary = {
           "Sistema IoT industrial para monitoramento de embarcações em tempo real: firmware ESP32 e painel corporativo com dashboards operacionais.",
         stack: "ESP32, PlatformIO, C++, Flask, Python",
         production: "Embarcações AMASA",
+        href: "https://github.com/camilomelo8428/sensores-amasa",
         highlights: [
           "Leitura de RPM, pressão de óleo e temperatura do motor",
           "Painel desktop com instalador Windows e visão mobile",
@@ -228,6 +232,7 @@ const pt: Dictionary = {
           "Plataforma corporativa de comunicação e suporte: chat em tempo real, help desk com SLA, base de conhecimento, tarefas e estoque.",
         stack: "Flask, Socket.IO, SQLAlchemy, PyInstaller",
         production: "Ambiente corporativo",
+        href: "https://github.com/camilomelo8428/jbflexa-chat",
         highlights: [
           "Chat real-time e gestão de chamados",
           "Executável Windows com atualização automática via GitHub",
@@ -240,6 +245,7 @@ const pt: Dictionary = {
           "Gestão de ponto e frequência de colaboradores com API REST, interface web e exportação de relatórios PDF/CSV.",
         stack: "FastAPI, SQLModel, Pydantic, Poetry",
         production: "AMASA",
+        href: "https://github.com/camilomelo8428/frequencia-amasa-rpm",
         highlights: [
           "Cadastro por setor e registro diário de frequência",
           "API documentada e arquitetura testável",
@@ -420,6 +426,7 @@ const en: Dictionary = {
     closeHint: "Click again to hide",
     stackLabel: "Stack",
     productionLabel: "Production",
+    codeLinkLabel: "View code",
     items: [
       {
         name: "Sensores AMASA",
@@ -427,6 +434,7 @@ const en: Dictionary = {
           "Industrial IoT system for real-time vessel monitoring: ESP32 firmware and a corporate dashboard with operational views.",
         stack: "ESP32, PlatformIO, C++, Flask, Python",
         production: "AMASA vessels",
+        href: "https://github.com/camilomelo8428/sensores-amasa",
         highlights: [
           "RPM, oil pressure, and engine temperature readings",
           "Desktop panel with Windows installer and mobile view",
@@ -439,6 +447,7 @@ const en: Dictionary = {
           "Corporate communication and support platform: real-time chat, SLA help desk, knowledge base, tasks, and inventory.",
         stack: "Flask, Socket.IO, SQLAlchemy, PyInstaller",
         production: "Corporate environment",
+        href: "https://github.com/camilomelo8428/jbflexa-chat",
         highlights: [
           "Real-time chat and ticket management",
           "Windows executable with auto-update via GitHub",
@@ -451,6 +460,7 @@ const en: Dictionary = {
           "Employee attendance management with a REST API, web UI, and PDF/CSV report exports.",
         stack: "FastAPI, SQLModel, Pydantic, Poetry",
         production: "AMASA",
+        href: "https://github.com/camilomelo8428/frequencia-amasa-rpm",
         highlights: [
           "Department onboarding and daily attendance logs",
           "Documented API and testable architecture",

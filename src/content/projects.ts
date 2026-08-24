@@ -20,6 +20,7 @@ export const projects: Project[] = [
       "Painel desktop com instalador Windows e visão mobile",
       "Integração de sensores industriais em rede de campo",
     ],
+    href: "https://github.com/camilomelo8428/sensores-amasa",
   },
   {
     name: "JBFlexa Chat",
@@ -32,6 +33,7 @@ export const projects: Project[] = [
       "Executável Windows com atualização automática via GitHub",
       "Admin, autenticação e relatórios operacionais",
     ],
+    href: "https://github.com/camilomelo8428/jbflexa-chat",
   },
   {
     name: "Frequência-amasa",
@@ -44,6 +46,7 @@ export const projects: Project[] = [
       "API documentada e arquitetura testável",
       "Relatórios para operação e RH",
     ],
+    href: "https://github.com/camilomelo8428/frequencia-amasa-rpm",
   },
   {
     name: "Backup Pro Amasa",
