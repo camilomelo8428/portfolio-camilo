@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState, type MouseEvent } from "react";
+import { createPortal } from "react-dom";
 import { assetUrl } from "@/lib/assets";
 
 type ProjectGalleryProps = {
@@ -61,11 +62,11 @@ function ImageLightbox({
     };
   }, [goNext, goPrevious, onClose]);
 
-  if (!current) {
+  if (!current || typeof document === "undefined") {
     return null;
   }
 
-  return (
+  const lightbox = (
     <div
       className="project-lightbox"
       role="dialog"
@@ -73,63 +74,62 @@ function ImageLightbox({
       aria-label={alt}
       onClick={onClose}
     >
-      <button
-        type="button"
-        className="project-lightbox__close"
-        aria-label={closeLabel}
-        onClick={(event) => {
-          event.stopPropagation();
-          onClose();
-        }}
-      >
-        ×
-      </button>
-
-      {total > 1 ? (
-        <>
-          <button
-            type="button"
-            className="project-lightbox__nav project-lightbox__nav--prev"
-            aria-label="Imagem anterior"
-            onClick={(event) => {
-              event.stopPropagation();
-              goPrevious();
-            }}
-          >
-            ‹
-          </button>
-          <button
-            type="button"
-            className="project-lightbox__nav project-lightbox__nav--next"
-            aria-label="Proxima imagem"
-            onClick={(event) => {
-              event.stopPropagation();
-              goNext();
-            }}
-          >
-            ›
-          </button>
-        </>
-      ) : null}
-
-      <figure
-        className="project-lightbox__figure"
+      <div
+        className="project-lightbox__panel"
         onClick={(event) => event.stopPropagation()}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={assetUrl(current)}
-          alt={`${alt} (${index + 1}/${total})`}
-          className="project-lightbox__image"
-        />
-        {total > 1 ? (
-          <figcaption className="project-lightbox__caption">
-            {index + 1} / {total}
-          </figcaption>
-        ) : null}
-      </figure>
+        <div className="project-lightbox__toolbar">
+          {total > 1 ? (
+            <span className="project-lightbox__counter">
+              {index + 1} / {total}
+            </span>
+          ) : (
+            <span aria-hidden="true" />
+          )}
+          <button
+            type="button"
+            className="project-lightbox__close"
+            aria-label={closeLabel}
+            onClick={onClose}
+          >
+            ×
+          </button>
+        </div>
+
+        <div className="project-lightbox__stage">
+          {total > 1 ? (
+            <>
+              <button
+                type="button"
+                className="project-lightbox__nav project-lightbox__nav--prev"
+                aria-label="Imagem anterior"
+                onClick={goPrevious}
+              >
+                ‹
+              </button>
+              <button
+                type="button"
+                className="project-lightbox__nav project-lightbox__nav--next"
+                aria-label="Proxima imagem"
+                onClick={goNext}
+              >
+                ›
+              </button>
+            </>
+          ) : null}
+
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={assetUrl(current)}
+            alt={`${alt} (${index + 1}/${total})`}
+            className="project-lightbox__image"
+          />
+        </div>
+      </div>
     </div>
   );
+
+  return createPortal(lightbox, document.body);
 }
 
 /**
