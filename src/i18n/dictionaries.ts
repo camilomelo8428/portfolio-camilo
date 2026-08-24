@@ -246,16 +246,29 @@ const pt: Dictionary = {
         ],
       },
       {
-        name: "Frequência-amasa",
+        name: "Frequência AMASA RPM",
         summary:
-          "Gestão de ponto e frequência de colaboradores com API REST, interface web e exportação de relatórios PDF/CSV.",
-        stack: "FastAPI, SQLModel, Pydantic, Poetry",
-        production: "AMASA",
+          "Documentação e referências de hardware para leitura de RPM em embarcações: ESP8266, sensor pick-up, condicionamento de sinal e guias PCB.",
+        stack: "ESP8266, Python, EasyEDA, MAX9924",
+        production: "Embarcações AMASA",
         href: "https://github.com/camilomelo8428/frequencia-amasa-rpm",
         highlights: [
-          "Cadastro por setor e registro diário de frequência",
-          "API documentada e arquitetura testável",
-          "Relatórios para operação e RH",
+          "Esquemas de proteção e ligação do sensor RPM",
+          "Scripts de automação e leitura de frequência",
+          "Integração com firmware Sensores AMASA",
+        ],
+      },
+      {
+        name: "Questionário Satisfação AMASA",
+        summary:
+          "Pesquisa de clima e satisfação corporativa: formulário público, painel administrativo, estatísticas e relatórios PDF por setor.",
+        stack: "Flask, Flask-Login, ReportLab",
+        production: "AMASA",
+        href: "https://github.com/camilomelo8428/questionario-satisfacao-amasa",
+        highlights: [
+          "Questionário configurável com avaliações 1–5",
+          "Dashboard admin com gestão de respostas",
+          "Relatórios PDF geral, detalhado e por setor",
         ],
       },
       {
@@ -468,16 +481,29 @@ const en: Dictionary = {
         ],
       },
       {
-        name: "Frequência-amasa",
+        name: "Frequência AMASA RPM",
         summary:
-          "Employee attendance management with a REST API, web UI, and PDF/CSV report exports.",
-        stack: "FastAPI, SQLModel, Pydantic, Poetry",
-        production: "AMASA",
+          "Hardware documentation and references for vessel RPM reading: ESP8266, pick-up sensor, signal conditioning, and PCB guides.",
+        stack: "ESP8266, Python, EasyEDA, MAX9924",
+        production: "AMASA vessels",
         href: "https://github.com/camilomelo8428/frequencia-amasa-rpm",
         highlights: [
-          "Department onboarding and daily attendance logs",
-          "Documented API and testable architecture",
-          "Reports for operations and HR",
+          "RPM sensor protection and wiring schematics",
+          "Automation scripts and frequency reading",
+          "Integration with Sensores AMASA firmware",
+        ],
+      },
+      {
+        name: "Questionário Satisfação AMASA",
+        summary:
+          "Corporate climate and satisfaction survey: public form, admin panel, statistics, and PDF reports by department.",
+        stack: "Flask, Flask-Login, ReportLab",
+        production: "AMASA",
+        href: "https://github.com/camilomelo8428/questionario-satisfacao-amasa",
+        highlights: [
+          "Configurable questionnaire with 1–5 ratings",
+          "Admin dashboard with response management",
+          "General, detailed, and department PDF reports",
         ],
       },
       {

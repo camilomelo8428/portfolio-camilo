@@ -7,7 +7,7 @@ export type Project = {
   href?: string;
 };
 
-/** Destaques alinhados ao currículo e aos projetos locais. */
+/** Projetos publicados no GitHub — alinhados ao portfólio. */
 export const projects: Project[] = [
   {
     name: "Sensores AMASA",
@@ -36,17 +36,30 @@ export const projects: Project[] = [
     href: "https://github.com/camilomelo8428/jbflexa-chat",
   },
   {
-    name: "Frequência-amasa",
+    name: "Frequência AMASA RPM",
     summary:
-      "Gestão de ponto e frequência de colaboradores com API REST, interface web e exportação de relatórios PDF/CSV.",
-    stack: "FastAPI, SQLModel, Pydantic, Poetry",
-    production: "AMASA",
+      "Documentação e referências de hardware para leitura de RPM em embarcações: ESP8266, sensor pick-up, condicionamento de sinal e guias PCB.",
+    stack: "ESP8266, Python, EasyEDA, MAX9924",
+    production: "Embarcações AMASA",
     highlights: [
-      "Cadastro por setor e registro diário de frequência",
-      "API documentada e arquitetura testável",
-      "Relatórios para operação e RH",
+      "Esquemas de proteção e ligação do sensor RPM",
+      "Scripts de automação e leitura de frequência",
+      "Integração com firmware Sensores AMASA",
     ],
     href: "https://github.com/camilomelo8428/frequencia-amasa-rpm",
+  },
+  {
+    name: "Questionário Satisfação AMASA",
+    summary:
+      "Pesquisa de clima e satisfação corporativa: formulário público, painel administrativo, estatísticas e relatórios PDF por setor.",
+    stack: "Flask, Flask-Login, ReportLab",
+    production: "AMASA",
+    highlights: [
+      "Questionário configurável com avaliações 1–5",
+      "Dashboard admin com gestão de respostas",
+      "Relatórios PDF geral, detalhado e por setor",
+    ],
+    href: "https://github.com/camilomelo8428/questionario-satisfacao-amasa",
   },
   {
     name: "Lina IA Local",
