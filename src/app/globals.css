@@ -897,6 +897,23 @@ body {
   }
 }
 
+.project-card {
+  height: 100%;
+  border: 1px solid rgba(238, 243, 247, 0.1);
+  background: rgba(16, 24, 32, 0.55);
+  padding: 1.5rem;
+  transition:
+    border-color 0.3s ease,
+    background-color 0.3s ease,
+    transform 0.3s ease;
+}
+
+.project-card:hover {
+  border-color: rgba(78, 179, 207, 0.4);
+  background: rgba(78, 179, 207, 0.06);
+  transform: translateY(-2px);
+}
+
 .project-hidden-card {
   height: 100%;
 }
