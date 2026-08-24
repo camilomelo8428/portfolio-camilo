@@ -812,9 +812,8 @@ body {
 }
 
 .contact-link--whatsapp {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
+  color: #6ee7a0;
+  font-weight: 500;
 }
 
 .contact-link--whatsapp:hover {

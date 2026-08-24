@@ -49,8 +49,7 @@ export function Contact() {
                 rel="noopener noreferrer"
                 className="contact-link contact-link--whatsapp"
               >
-                <WhatsAppIcon className="inline h-4 w-4 align-[-2px]" />{" "}
-                {t.profile.phone} · {t.contact.whatsapp}
+                💬 {t.profile.phone} · {t.contact.whatsapp}
               </a>
             </li>
             <li>
