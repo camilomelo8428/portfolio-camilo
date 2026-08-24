@@ -2,7 +2,9 @@
 
 import { Atmosphere } from "@/components/Atmosphere";
 import { HeroAvatar } from "@/components/HeroAvatar";
+import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 import { useLanguage } from "@/i18n/LanguageProvider";
+import { buildWhatsAppHref } from "@/lib/whatsapp";
 
 function highlightFullStack(text: string) {
   const parts = text.split(/(Full Stack)/i);
@@ -20,6 +22,10 @@ function highlightFullStack(text: string) {
 
 export function Hero() {
   const { t } = useLanguage();
+  const whatsappHref = buildWhatsAppHref(
+    t.profile.phoneHref,
+    t.contact.whatsappMessage,
+  );
 
   return (
     <section
@@ -40,6 +46,15 @@ export function Hero() {
         <div className="anim-rise-delay-2 mt-8 flex flex-wrap items-center justify-center gap-3">
           <a href="#projetos" className="btn-outline">
             {t.hero.ctaProjects}
+          </a>
+          <a
+            href={whatsappHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-whatsapp"
+          >
+            <WhatsAppIcon className="h-5 w-5" />
+            {t.hero.ctaWhatsapp}
           </a>
           <a href="#contato" className="btn-outline">
             {t.hero.ctaContact}

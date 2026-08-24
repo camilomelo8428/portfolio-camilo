@@ -21,6 +21,7 @@ export type Dictionary = {
     tagline: string;
     ctaProjects: string;
     ctaContact: string;
+    ctaWhatsapp: string;
     caption: string;
   };
   about: {
@@ -72,6 +73,9 @@ export type Dictionary = {
     lead: string;
     emailCta: string;
     whatsapp: string;
+    whatsappCta: string;
+    whatsappMessage: string;
+    whatsappAriaLabel: string;
     emailLabel: string;
     phoneLabel: string;
     linkedinLabel: string;
@@ -128,6 +132,7 @@ const pt: Dictionary = {
       "Backend, frontend e infra — sistemas em produção, da fábrica ao código.",
     ctaProjects: "Ver projetos",
     ctaContact: "Contato",
+    ctaWhatsapp: "WhatsApp",
     caption: "Em código · Belém-PA",
   },
   about: {
@@ -309,8 +314,12 @@ const pt: Dictionary = {
     kicker: "Contato",
     heading: "Vamos conversar?",
     lead: "Se quiser falar sobre uma oportunidade, projeto ou tecnologia, fique à vontade para entrar em contato.",
-    emailCta: "Enviar mensagem",
+    emailCta: "Enviar e-mail",
     whatsapp: "WhatsApp",
+    whatsappCta: "Chamar no WhatsApp",
+    whatsappMessage:
+      "Olá Camilo! Vi seu portfólio e gostaria de conversar sobre uma oportunidade ou projeto.",
+    whatsappAriaLabel: "Abrir conversa no WhatsApp com Camilo Lessa",
     emailLabel: "E-mail",
     phoneLabel: "Telefone",
     linkedinLabel: "LinkedIn",
@@ -343,6 +352,7 @@ const en: Dictionary = {
       "Backend, frontend, and infrastructure — production systems from the plant floor to code.",
     ctaProjects: "View projects",
     ctaContact: "Contact",
+    ctaWhatsapp: "WhatsApp",
     caption: "Shipping code · Belém-PA",
   },
   about: {
@@ -524,8 +534,12 @@ const en: Dictionary = {
     kicker: "Contact",
     heading: "Let's talk?",
     lead: "If you'd like to discuss an opportunity, project, or technology, feel free to reach out.",
-    emailCta: "Send message",
+    emailCta: "Send email",
     whatsapp: "WhatsApp",
+    whatsappCta: "Chat on WhatsApp",
+    whatsappMessage:
+      "Hi Camilo! I saw your portfolio and would like to talk about an opportunity or project.",
+    whatsappAriaLabel: "Open WhatsApp chat with Camilo Lessa",
     emailLabel: "Email",
     phoneLabel: "Phone",
     linkedinLabel: "LinkedIn",

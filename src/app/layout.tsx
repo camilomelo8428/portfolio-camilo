@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Barlow_Condensed, IBM_Plex_Sans } from "next/font/google";
 import { Header } from "@/components/Header";
 import { Providers } from "@/components/Providers";
+import { WhatsAppFloating } from "@/components/WhatsAppFloating";
 import "./globals.css";
 
 const display = Barlow_Condensed({
@@ -33,6 +34,7 @@ export default function RootLayout({
         <Providers>
           <Header />
           {children}
+          <WhatsAppFloating />
         </Providers>
       </body>
     </html>
