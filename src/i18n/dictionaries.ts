@@ -28,6 +28,8 @@ export type Dictionary = {
     kicker: string;
     heading: string;
     paragraphs: string[];
+    outdoorLabel: string;
+    outdoorHint: string;
     terminal: { command: string; output: string }[];
   };
   tech: {
@@ -148,18 +150,39 @@ const pt: Dictionary = {
       "Me chamo Camilo, sou de Belém-PA e atuo como Desenvolvedor Full Stack e Gestor de TI na AMASA. Gosto de entender o que acontece por trás da interface — da infraestrutura ao código que roda em produção.",
       "Entre sensores em embarcações, plataformas corporativas e automação no chão de fábrica, vou construindo sistemas que resolvem problemas reais. Ainda tem muito para aprender, e é isso que mais me move na área de tecnologia.",
     ],
+    outdoorLabel: "Painel outdoor de informações",
+    outdoorHint: "Toque para trocar o canal",
     terminal: [
       { command: "whoami", output: "Camilo Lessa de Melo" },
       { command: "pwd", output: "/belem-pa/amasa/ti" },
       {
-        command: "ls",
+        command: "role --current",
+        output: "Gestor de TI · Desenvolvedor Full Stack",
+      },
+      {
+        command: "ls --projects",
         output: "projetos comerciais sob consulta (repos privados)",
       },
       {
-        command: "git status",
-        output: "11 repos publicados — produção e portfólio ativos",
+        command: "stack --core",
+        output: "Python · FastAPI · React · Flask · ESP32 · SQL",
       },
-      { command: "ping reality", output: "sistemas no ar — uptime em progresso" },
+      {
+        command: "git status",
+        output: "produção e portfólio ativos — entrega contínua",
+      },
+      {
+        command: "focus --now",
+        output: "IoT industrial · sistemas corporativos · automação",
+      },
+      {
+        command: "ping reality",
+        output: "sistemas no ar — uptime em progresso",
+      },
+      {
+        command: "contact --open",
+        output: "Belém-PA · disponível para conversas técnicas",
+      },
     ],
   },
   tech: {
@@ -426,18 +449,39 @@ const en: Dictionary = {
       "I'm Camilo from Belém, Brazil — Full Stack Developer and IT Manager at AMASA. I like understanding what happens behind the interface, from infrastructure to production code.",
       "Between vessel sensors, corporate platforms, and shop-floor automation, I build systems that solve real problems. There's still a lot to learn, and that's what keeps me moving in tech.",
     ],
+    outdoorLabel: "Outdoor information panel",
+    outdoorHint: "Tap to change channel",
     terminal: [
       { command: "whoami", output: "Camilo Lessa de Melo" },
       { command: "pwd", output: "/belem-pa/amasa/it" },
       {
-        command: "ls",
-        output: "projetos comerciais sob consulta (repos privados)",
+        command: "role --current",
+        output: "IT Manager · Full Stack Developer",
+      },
+      {
+        command: "ls --projects",
+        output: "commercial projects on request (private repos)",
+      },
+      {
+        command: "stack --core",
+        output: "Python · FastAPI · React · Flask · ESP32 · SQL",
       },
       {
         command: "git status",
-        output: "11 public repos — production and portfolio active",
+        output: "production and portfolio active — continuous delivery",
       },
-      { command: "ping reality", output: "systems online — uptime in progress" },
+      {
+        command: "focus --now",
+        output: "industrial IoT · corporate systems · automation",
+      },
+      {
+        command: "ping reality",
+        output: "systems online — uptime in progress",
+      },
+      {
+        command: "contact --open",
+        output: "Belém-PA · open to technical conversations",
+      },
     ],
   },
   tech: {

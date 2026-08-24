@@ -1589,6 +1589,219 @@ body {
   perspective: 900px;
 }
 
+.terminal-outdoor {
+  --crt-ink: #d7ecef;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  border: 1px solid rgba(78, 179, 207, 0.28);
+  border-radius: 0.55rem;
+  background:
+    linear-gradient(180deg, #121820 0%, #070b10 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 16px 36px rgba(0, 0, 0, 0.35);
+  touch-action: manipulation;
+  user-select: none;
+  cursor: pointer;
+}
+
+.terminal-outdoor__bezel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid rgba(78, 179, 207, 0.18);
+  background: rgba(5, 8, 12, 0.85);
+  font-family: ui-monospace, "Cascadia Code", "Consolas", monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
+.terminal-outdoor__led {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  background: #4ae87a;
+  box-shadow: 0 0 10px rgba(74, 232, 122, 0.8);
+  flex-shrink: 0;
+}
+
+.terminal-outdoor.is-glitching .terminal-outdoor__led {
+  background: #e8894a;
+  box-shadow: 0 0 10px rgba(232, 137, 74, 0.85);
+  animation: outdoor-led-flicker 0.12s steps(2) infinite;
+}
+
+.terminal-outdoor__brand {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: color-mix(in srgb, var(--ink-muted) 70%, var(--steel));
+}
+
+.terminal-outdoor__ch {
+  flex-shrink: 0;
+  color: var(--steel);
+}
+
+.terminal-outdoor__screen {
+  position: relative;
+  min-height: clamp(10.5rem, 28vw, 13.5rem);
+  padding: clamp(0.95rem, 2.5vw, 1.25rem);
+  overflow: hidden;
+  background: rgba(5, 8, 12, 0.92);
+  font-family: ui-monospace, "Cascadia Code", "Consolas", monospace;
+  font-size: clamp(0.78rem, 0.7rem + 0.35vw, 0.92rem);
+  line-height: 1.55;
+}
+
+.terminal-outdoor__scanlines,
+.terminal-outdoor__vignette,
+.terminal-outdoor__static {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.terminal-outdoor__scanlines {
+  z-index: 3;
+  opacity: 0.18;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.05) 0,
+    rgba(255, 255, 255, 0.05) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  mix-blend-mode: soft-light;
+}
+
+.terminal-outdoor__vignette {
+  z-index: 4;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 45%,
+    rgba(0, 0, 0, 0.45) 100%
+  );
+}
+
+.terminal-outdoor__static {
+  z-index: 5;
+  opacity: 0;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      #000 0,
+      #000 1px,
+      #fff 1px,
+      #fff 2px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      #111 0,
+      #111 1px,
+      #ddd 1px,
+      #ddd 2px
+    ),
+    url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.95' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 3px 3px, 4px 4px, 160px 160px;
+  mix-blend-mode: screen;
+  filter: contrast(1.35) brightness(1.15);
+}
+
+.terminal-outdoor.is-glitching .terminal-outdoor__static {
+  opacity: 0.72;
+  animation: outdoor-static-jitter 0.08s steps(2) infinite;
+}
+
+.terminal-outdoor.is-glitching .terminal-outdoor__screen {
+  animation: outdoor-signal-shake 0.1s steps(2) infinite;
+}
+
+.terminal-outdoor.is-glitching .terminal-outdoor__slide {
+  filter: blur(1.2px) contrast(1.4) saturate(0.2);
+  opacity: 0.25;
+  transform: skewX(-2deg) scaleY(1.04);
+}
+
+.terminal-outdoor__slide {
+  position: relative;
+  z-index: 2;
+  min-height: 6.5rem;
+  transition:
+    opacity 0.2s ease,
+    filter 0.2s ease,
+    transform 0.2s ease;
+}
+
+.terminal-outdoor__slide.is-hidden {
+  opacity: 0.15;
+}
+
+.terminal-outdoor__output {
+  margin-top: 0.55rem;
+  padding-left: 0;
+  max-width: 36rem;
+  font-size: clamp(0.95rem, 0.85rem + 0.55vw, 1.15rem);
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--crt-ink);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.terminal-outdoor__footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.55rem 0.85rem;
+  padding: 0.55rem 0.75rem 0.7rem;
+  border-top: 1px solid rgba(78, 179, 207, 0.14);
+  background: rgba(5, 8, 12, 0.72);
+}
+
+.terminal-outdoor__dots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.terminal-outdoor__dot {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 999px;
+  border: 0;
+  background: rgba(238, 243, 247, 0.28);
+  padding: 0;
+  cursor: pointer;
+  transition:
+    background-color 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.terminal-outdoor__dot.is-active {
+  background: var(--steel);
+  transform: scale(1.25);
+  box-shadow: 0 0 10px rgba(78, 179, 207, 0.55);
+}
+
+.terminal-outdoor__hint {
+  font-family: ui-monospace, "Cascadia Code", "Consolas", monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+}
+
 .terminal-panel {
   border: 1px solid rgba(78, 179, 207, 0.22);
   background: rgba(5, 8, 12, 0.85);
@@ -1641,6 +1854,89 @@ body {
   }
   50% {
     opacity: 0;
+  }
+}
+
+@keyframes outdoor-static-jitter {
+  0% {
+    background-position: 0 0, 0 0, 0 0;
+    transform: translate(0, 0);
+  }
+  50% {
+    background-position: -6px 4px, 3px -5px, 18px -12px;
+    transform: translate(1px, -1px);
+  }
+  100% {
+    background-position: 4px -3px, -5px 2px, -14px 10px;
+    transform: translate(-1px, 1px);
+  }
+}
+
+@keyframes outdoor-signal-shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-2px) skewX(0.6deg);
+  }
+  50% {
+    transform: translateX(2px);
+  }
+  75% {
+    transform: translateX(-1px) skewX(-0.5deg);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes outdoor-led-flicker {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (max-width: 480px) {
+  .terminal-outdoor__bezel {
+    padding: 0.5rem 0.65rem;
+    font-size: 0.58rem;
+  }
+
+  .terminal-outdoor__screen {
+    min-height: 11rem;
+    padding: 0.9rem 0.85rem;
+  }
+
+  .terminal-outdoor__hint {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .terminal-outdoor.is-glitching .terminal-outdoor__static,
+  .terminal-outdoor.is-glitching .terminal-outdoor__screen,
+  .terminal-outdoor.is-glitching .terminal-outdoor__led {
+    animation: none;
+  }
+
+  .terminal-outdoor.is-glitching .terminal-outdoor__static {
+    opacity: 0.35;
+  }
+
+  .terminal-outdoor.is-glitching .terminal-outdoor__slide {
+    filter: none;
+    opacity: 0.55;
+    transform: none;
+  }
+
+  .terminal-cursor,
+  .terminal-cursor--idle {
+    animation: none;
+    opacity: 1;
   }
 }
 
