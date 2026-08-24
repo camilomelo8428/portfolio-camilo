@@ -308,7 +308,7 @@ const pt: Dictionary = {
         ],
       },
       {
-        company: "Rodneycom Tecnologia e Serviços",
+        company: "W3 Solution",
         role: "Desenvolvedor Front-end",
         period: "2018 – 2023",
         bullets: [
@@ -543,7 +543,7 @@ const en: Dictionary = {
         ],
       },
       {
-        company: "Rodneycom Tecnologia e Serviços",
+        company: "W3 Solution",
         role: "Front-end Developer",
         period: "2018 – 2023",
         bullets: [
