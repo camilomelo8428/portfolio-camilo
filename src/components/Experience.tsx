@@ -20,17 +20,17 @@ export function Experience() {
               className="experience-item grid gap-2 py-8 md:grid-cols-[1fr_auto] md:gap-8"
             >
               <div>
-                <h3 className="font-[family-name:var(--font-display)] text-lg font-semibold text-ink md:text-xl">
-                  {job.company}
-                </h3>
-                <p className="mt-1 text-sm font-medium text-steel">{job.role}</p>
+                <h3 className="experience-item__company">{job.company}</h3>
+                <p className="experience-item__role">{job.role}</p>
                 <ul className="mt-4 space-y-2 text-sm leading-relaxed text-ink-muted md:text-base">
                   {job.bullets.map((bullet) => (
                     <li key={bullet}>{bullet}</li>
                   ))}
                 </ul>
               </div>
-              <p className="text-sm text-ink-muted md:text-right">{job.period}</p>
+              <p className="experience-item__period md:text-right">
+                {job.period}
+              </p>
             </RevealOnScroll>
           ))}
         </ol>

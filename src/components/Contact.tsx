@@ -51,7 +51,7 @@ export function Contact() {
               </a>
             </li>
             <li>
-              <a href={mailto} className="contact-link">
+              <a href={mailto} className="contact-link contact-link--email">
                 ✉️ {t.profile.email}
               </a>
             </li>
@@ -60,7 +60,7 @@ export function Contact() {
                 href={t.profile.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="contact-link"
+                className="contact-link contact-link--linkedin"
               >
                 🔗 {t.profile.linkedinLabel}
               </a>
@@ -70,7 +70,7 @@ export function Contact() {
                 href={t.profile.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="contact-link"
+                className="contact-link contact-link--github"
               >
                 ⌨️ {t.profile.githubLabel}
               </a>

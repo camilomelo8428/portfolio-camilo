@@ -115,6 +115,7 @@ export function Tech() {
               role="tab"
               aria-selected={filter === "all"}
               className={`tech-filter ${filter === "all" ? "is-active" : ""}`}
+              data-tone="development"
               onClick={() => setFilter("all")}
             >
               {t.tech.filterAll}
@@ -126,6 +127,7 @@ export function Tech() {
                 role="tab"
                 aria-selected={filter === group.id}
                 className={`tech-filter ${filter === group.id ? "is-active" : ""}`}
+                data-tone={group.id}
                 onClick={() => setFilter(group.id)}
               >
                 {group.title}
@@ -136,7 +138,15 @@ export function Tech() {
 
         {activeTech ? (
           <RevealOnScroll delay={80}>
-            <div className="tech-focus" aria-live="polite">
+            <div
+              className="tech-focus"
+              data-tone={
+                groups.find((group) =>
+                  group.items.some((item) => item.id === activeTech.id),
+                )?.id ?? "development"
+              }
+              aria-live="polite"
+            >
               <div className="tech-focus__mono">{activeTech.monogram}</div>
               <div>
                 <p className="tech-focus__kicker">
@@ -154,7 +164,7 @@ export function Tech() {
         <div className="mt-8 space-y-10">
           {visibleGroups.map((group, groupIndex) => (
             <RevealOnScroll key={group.id} delay={groupIndex * 50}>
-              <div className="tech-group-card">
+              <div className="tech-group-card" data-tone={group.id}>
                 <h3 className="tech-group-card__title">{group.title}</h3>
                 <div className="tech-grid">
                   {group.items.map((tech) => (

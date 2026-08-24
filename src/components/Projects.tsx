@@ -27,11 +27,13 @@ function ProjectCard({
   project,
   isOpen,
   onToggle,
+  tone,
   labels,
 }: {
   project: ProjectItem;
   isOpen: boolean;
   onToggle: () => void;
+  tone: ProjectGroupId;
   labels: {
     revealHint: string;
     closeHint: string;
@@ -49,6 +51,7 @@ function ProjectCard({
   return (
     <article
       className={`project-card ${isOpen ? "project-card--open" : "project-card--compact"}`}
+      data-tone={tone}
     >
       {cover && !isOpen ? (
         <ProjectGallery images={[cover]} alt={alt} interactive={false} />
@@ -71,9 +74,7 @@ function ProjectCard({
         onClick={onToggle}
       >
         <div className="project-card__header">
-          <h3 className="font-[family-name:var(--font-display)] text-lg font-semibold leading-snug text-ink md:text-xl">
-            {project.name}
-          </h3>
+          <h3 className="project-card__title">{project.name}</h3>
           <span className="project-card__badge">{project.production}</span>
         </div>
 
@@ -93,7 +94,7 @@ function ProjectCard({
             <ul className="mt-4 space-y-2 text-sm text-ink">
               {project.highlights.map((item) => (
                 <li key={item} className="flex gap-2">
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-steel" />
+                  <span className="project-card__bullet" />
                   <span>{item}</span>
                 </li>
               ))}
@@ -108,7 +109,7 @@ function ProjectCard({
                   href={project.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-steel underline-offset-4 hover:underline"
+                  className="project-card__link"
                   onClick={(event) => event.stopPropagation()}
                 >
                   {labels.codeLinkLabel} ↗
@@ -177,7 +178,7 @@ export function Projects() {
         <div className="mt-12 space-y-12">
           {groupedProjects.map((group, groupIndex) => (
             <RevealOnScroll key={group.groupId} delay={groupIndex * 40}>
-              <div className="projects-group">
+              <div className="projects-group" data-tone={group.groupId}>
                 <h3 className="projects-group__title">{group.title}</h3>
                 <div className="projects-grid mt-5">
                   {group.items.map((project, index) => (
@@ -188,6 +189,7 @@ export function Projects() {
                     >
                       <ProjectCard
                         project={project}
+                        tone={group.groupId}
                         isOpen={expanded.has(project.name)}
                         onToggle={() => toggleProject(project.name)}
                         labels={cardLabels}

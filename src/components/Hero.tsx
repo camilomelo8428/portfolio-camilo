@@ -36,7 +36,7 @@ export function Hero() {
       <div className="page-container relative">
         <h1 className="anim-rise hero-title">
           {highlightFullStack(t.hero.roleLine1)}
-          <span className="mt-1 block">{t.hero.roleLine2}</span>
+          <span className="mt-1 block hero-title__line2">{t.hero.roleLine2}</span>
         </h1>
 
         <p className="anim-rise-delay section-lead mx-auto">
