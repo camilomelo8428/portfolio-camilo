@@ -17,7 +17,7 @@ export const experience = [
     ],
   },
   {
-    company: "Rodneycom Tecnologia e Serviços",
+    company: "W3 Solution",
     role: "Desenvolvedor Front-end",
     period: "2018 – 2023",
     bullets: [
