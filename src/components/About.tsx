@@ -9,11 +9,9 @@ export function About() {
 
   return (
     <section id="sobre" className="section-shell border-b border-line bg-surface">
-      <div className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-20">
+      <div className="page-container">
         <RevealOnScroll>
-          <h2 className="font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-ink md:text-4xl">
-            {t.about.heading}
-          </h2>
+          <h2 className="section-heading">{t.about.heading}</h2>
         </RevealOnScroll>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">

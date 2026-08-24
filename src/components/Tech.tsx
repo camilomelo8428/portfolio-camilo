@@ -97,12 +97,10 @@ export function Tech() {
 
   return (
     <section id="tecnologias" className="section-shell border-b border-line">
-      <div className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-20">
+      <div className="page-container">
         <RevealOnScroll>
-          <h2 className="font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-ink md:text-4xl">
-            {t.tech.heading}
-          </h2>
-          <p className="mt-3 max-w-xl text-ink-muted">{t.tech.lead}</p>
+          <h2 className="section-heading">{t.tech.heading}</h2>
+          <p className="section-lead">{t.tech.lead}</p>
           <p className="tech-hint mt-2">{t.tech.hint}</p>
         </RevealOnScroll>
 

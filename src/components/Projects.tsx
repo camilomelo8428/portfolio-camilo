@@ -168,14 +168,10 @@ export function Projects() {
 
   return (
     <section id="projetos" className="section-shell border-b border-line bg-bg-deep/40">
-      <div className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-20">
+      <div className="page-container">
         <RevealOnScroll>
-          <h2 className="font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-ink md:text-4xl">
-            {t.projects.heading}
-          </h2>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-ink-muted md:text-lg">
-            {t.projects.lead}
-          </p>
+          <h2 className="section-heading">{t.projects.heading}</h2>
+          <p className="section-lead">{t.projects.lead}</p>
         </RevealOnScroll>
 
         <div className="mt-12 space-y-12">
@@ -183,7 +179,7 @@ export function Projects() {
             <RevealOnScroll key={group.groupId} delay={groupIndex * 40}>
               <div className="projects-group">
                 <h3 className="projects-group__title">{group.title}</h3>
-                <div className="projects-grid mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="projects-grid mt-5">
                   {group.items.map((project, index) => (
                     <RevealOnScroll
                       key={project.name}

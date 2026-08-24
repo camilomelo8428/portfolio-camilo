@@ -15,12 +15,10 @@ export function Contact() {
 
   return (
     <section id="contato" className="section-shell border-t border-line bg-bg-deep">
-      <div className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-20">
+      <div className="page-container">
         <RevealOnScroll>
-          <h2 className="font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-ink md:text-4xl">
-            {t.contact.heading}
-          </h2>
-          <p className="mt-4 max-w-xl text-ink-muted">{t.contact.lead}</p>
+          <h2 className="section-heading">{t.contact.heading}</h2>
+          <p className="section-lead">{t.contact.lead}</p>
         </RevealOnScroll>
 
         <RevealOnScroll delay={80}>

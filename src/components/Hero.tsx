@@ -30,20 +30,20 @@ export function Hero() {
   return (
     <section
       id="topo"
-      className="hero-section hero-section--centered relative min-h-[88vh] overflow-hidden border-b border-line"
+      className="hero-section hero-section--centered relative overflow-hidden border-b border-line"
     >
       <Atmosphere />
-      <div className="relative mx-auto flex max-w-3xl flex-col items-center px-5 pb-20 pt-16 text-center md:px-8 md:pb-24 md:pt-20">
-        <h1 className="anim-rise font-[family-name:var(--font-display)] text-4xl font-semibold leading-tight tracking-tight text-ink md:text-6xl">
+      <div className="page-container relative">
+        <h1 className="anim-rise hero-title">
           {highlightFullStack(t.hero.roleLine1)}
           <span className="mt-1 block">{t.hero.roleLine2}</span>
         </h1>
 
-        <p className="anim-rise-delay mt-6 max-w-xl text-base leading-relaxed text-ink-muted md:text-lg">
+        <p className="anim-rise-delay section-lead mx-auto">
           {t.hero.tagline}
         </p>
 
-        <div className="anim-rise-delay-2 mt-8 flex flex-wrap items-center justify-center gap-3">
+        <div className="anim-rise-delay-2 hero-actions">
           <a href="#projetos" className="btn-outline">
             {t.hero.ctaProjects}
           </a>

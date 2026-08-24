@@ -20,18 +20,18 @@ export function Header() {
 
   return (
     <header className="site-header sticky top-0 z-50 border-b border-line/70">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5 md:px-8">
-        <a href="#topo" className="group flex items-center gap-3">
+      <div className="page-rail flex items-center justify-between gap-3 py-3.5">
+        <a href="#topo" className="site-brand group">
           <Image
             src={assetUrl("/avatar.png")}
             alt=""
             width={36}
             height={36}
             unoptimized
-            className="h-9 w-9 object-cover object-[center_18%] transition duration-300 group-hover:ring-2 group-hover:ring-steel/50"
+            className="h-9 w-9 shrink-0 object-cover object-[center_18%] transition duration-300 group-hover:ring-2 group-hover:ring-steel/50"
             style={{ borderRadius: "2px" }}
           />
-          <span className="font-[family-name:var(--font-display)] text-lg font-semibold tracking-tight text-ink transition group-hover:text-steel">
+          <span className="site-brand__name">
             {t.profile.brand}
             <span className="text-steel">.Dev</span>
           </span>
@@ -44,7 +44,7 @@ export function Header() {
           ))}
           <LanguageSwitcher />
         </nav>
-        <div className="flex items-center gap-4 md:hidden">
+        <div className="flex shrink-0 items-center gap-4 md:hidden">
           <LanguageSwitcher />
           <button
             type="button"
@@ -58,7 +58,12 @@ export function Header() {
         </div>
       </div>
       {open ? (
-        <nav className="flex flex-col gap-3 border-t border-line px-5 py-4 md:hidden">
+        <nav
+          className="flex flex-col gap-3 border-t border-line py-4 md:hidden"
+          style={{
+            paddingInline: "var(--page-pad-x)",
+          }}
+        >
           {links.map((link) => (
             <a
               key={link.href}
