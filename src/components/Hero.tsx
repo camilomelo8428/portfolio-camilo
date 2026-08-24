@@ -45,7 +45,7 @@ export function Hero() {
 
         <div className="anim-rise-delay-2 hero-actions">
           <a href="#projetos" className="btn-outline">
-            {t.hero.ctaProjects}
+            <span>{t.hero.ctaProjects}</span>
           </a>
           <a
             href={whatsappHref}
@@ -54,10 +54,10 @@ export function Hero() {
             className="btn-whatsapp"
           >
             <WhatsAppIcon className="h-5 w-5" />
-            {t.hero.ctaWhatsapp}
+            <span>{t.hero.ctaWhatsapp}</span>
           </a>
           <a href="#contato" className="btn-outline">
-            {t.hero.ctaContact}
+            <span>{t.hero.ctaContact}</span>
           </a>
         </div>
 

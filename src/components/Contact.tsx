@@ -22,7 +22,7 @@ export function Contact() {
         </RevealOnScroll>
 
         <RevealOnScroll delay={80}>
-          <div className="mt-10 flex flex-wrap gap-3">
+          <div className="mt-10 flex flex-wrap gap-3 contact-actions">
             <a
               href={whatsappHref}
               target="_blank"
@@ -30,10 +30,10 @@ export function Contact() {
               className="btn-whatsapp"
             >
               <WhatsAppIcon className="h-5 w-5" />
-              {t.contact.whatsappCta}
+              <span>{t.contact.whatsappCta}</span>
             </a>
             <a href={mailto} className="btn-outline">
-              {t.contact.emailCta}
+              <span>{t.contact.emailCta}</span>
             </a>
           </div>
         </RevealOnScroll>
