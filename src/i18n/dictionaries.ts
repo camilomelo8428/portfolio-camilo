@@ -34,9 +34,11 @@ export type Dictionary = {
     kicker: string;
     heading: string;
     lead: string;
+    hint: string;
     currentlyLabel: string;
-    currentlyItems: string[];
-    groups: { title: string; items: string[] }[];
+    filterAll: string;
+    levelLabels: Record<"core" | "frequent" | "support", string>;
+    groupTitles: Record<"development" | "infra" | "data", string>;
   };
   projects: {
     kicker: string;
@@ -164,54 +166,19 @@ const pt: Dictionary = {
     kicker: "Stack",
     heading: "Tecnologias",
     lead: "Entre uma ideia e outra, essas são as tecnologias que mais aparecem no caminho.",
+    hint: "Passe o mouse ou toque em uma tecnologia para ver onde ela entra nos projetos.",
     currentlyLabel: "Usando atualmente",
-    currentlyItems: [
-      "React",
-      "Next.js",
-      "TypeScript",
-      "Python",
-      "FastAPI",
-      "Flask",
-      "Gradio",
-      "ESP32",
-      "Proxmox",
-    ],
-    groups: [
-      {
-        title: "Desenvolvimento",
-        items: [
-          "Python",
-          "Flask",
-          "FastAPI",
-          "Node.js",
-          "React",
-          "TypeScript",
-          "Socket.IO",
-          "PyQt6",
-        ],
-      },
-      {
-        title: "Infra e IoT",
-        items: [
-          "Proxmox",
-          "Firewall Endian",
-          "ESP32 / PlatformIO",
-          "C++",
-          "Redes",
-          "SQL Server",
-        ],
-      },
-      {
-        title: "Dados e cloud",
-        items: [
-          "Supabase",
-          "PostgreSQL",
-          "MySQL",
-          "Google Drive API",
-          "Vercel",
-        ],
-      },
-    ],
+    filterAll: "Todas",
+    levelLabels: {
+      core: "Core",
+      frequent: "Frequente",
+      support: "Suporte",
+    },
+    groupTitles: {
+      development: "Desenvolvimento",
+      infra: "Infra e IoT",
+      data: "Dados e cloud",
+    },
   },
   projects: {
     kicker: "Portfólio",
@@ -488,54 +455,19 @@ const en: Dictionary = {
     kicker: "Stack",
     heading: "Technologies",
     lead: "Between one idea and the next, these are the tools that show up most often.",
+    hint: "Hover or tap a technology to see how it shows up in the projects.",
     currentlyLabel: "Currently using",
-    currentlyItems: [
-      "React",
-      "Next.js",
-      "TypeScript",
-      "Python",
-      "FastAPI",
-      "Flask",
-      "Gradio",
-      "ESP32",
-      "Proxmox",
-    ],
-    groups: [
-      {
-        title: "Development",
-        items: [
-          "Python",
-          "Flask",
-          "FastAPI",
-          "Node.js",
-          "React",
-          "TypeScript",
-          "Socket.IO",
-          "PyQt6",
-        ],
-      },
-      {
-        title: "Infra & IoT",
-        items: [
-          "Proxmox",
-          "Endian Firewall",
-          "ESP32 / PlatformIO",
-          "C++",
-          "Networking",
-          "SQL Server",
-        ],
-      },
-      {
-        title: "Data & cloud",
-        items: [
-          "Supabase",
-          "PostgreSQL",
-          "MySQL",
-          "Google Drive API",
-          "Vercel",
-        ],
-      },
-    ],
+    filterAll: "All",
+    levelLabels: {
+      core: "Core",
+      frequent: "Frequent",
+      support: "Support",
+    },
+    groupTitles: {
+      development: "Development",
+      infra: "Infra & IoT",
+      data: "Data & cloud",
+    },
   },
   projects: {
     kicker: "Portfolio",
