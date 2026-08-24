@@ -1129,6 +1129,25 @@ body {
   align-items: start;
 }
 
+.projects-group__title {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+
+.projects-group__title::after {
+  display: block;
+  width: 2.5rem;
+  height: 2px;
+  margin-top: 0.5rem;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--steel), transparent);
+  content: "";
+}
+
 .project-gallery__nav {
   position: absolute;
   top: 50%;

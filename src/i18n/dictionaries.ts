@@ -42,6 +42,7 @@ export type Dictionary = {
     kicker: string;
     heading: string;
     lead: string;
+    groupLabels: Record<"amasa" | "corporate" | "commercial" | "personal", string>;
     hiddenTitle: string;
     revealHint: string;
     closeHint: string;
@@ -150,11 +151,11 @@ const pt: Dictionary = {
       { command: "pwd", output: "/belem-pa/amasa/ti" },
       {
         command: "ls",
-        output: "sensores-amasa jbflexa-chat frequencia-amasa proxmox",
+        output: "sensores-amasa frequencia-amasa jbflexa-chat questionario-amasa lina-ia",
       },
       {
         command: "git status",
-        output: "3 projetos em produção, mudanças everywhere",
+        output: "11 repos publicados — produção e portfólio ativos",
       },
       { command: "ping reality", output: "sistemas no ar — uptime em progresso" },
     ],
@@ -182,6 +183,7 @@ const pt: Dictionary = {
           "Python",
           "Flask",
           "FastAPI",
+          "Node.js",
           "React",
           "TypeScript",
           "Socket.IO",
@@ -214,7 +216,13 @@ const pt: Dictionary = {
   projects: {
     kicker: "Portfólio",
     heading: "Projetos",
-    lead: "Repositórios no GitHub — IoT industrial, sistemas corporativos, APIs e aplicações web em produção.",
+    lead: "11 repositórios no GitHub — IoT industrial, sistemas corporativos, APIs e aplicações web.",
+    groupLabels: {
+      amasa: "AMASA & IoT",
+      corporate: "Corporativo",
+      commercial: "Comercial & clientes",
+      personal: "Pessoal & portfólio",
+    },
     hiddenTitle: "Projeto oculto",
     revealHint: "Clique para ver detalhes",
     closeHint: "Clique para minimizar",
@@ -467,11 +475,11 @@ const en: Dictionary = {
       { command: "pwd", output: "/belem-pa/amasa/it" },
       {
         command: "ls",
-        output: "sensores-amasa jbflexa-chat frequencia-amasa proxmox",
+        output: "sensores-amasa frequencia-amasa jbflexa-chat questionario-amasa lina-ia",
       },
       {
         command: "git status",
-        output: "3 production projects, changes everywhere",
+        output: "11 public repos — production and portfolio active",
       },
       { command: "ping reality", output: "systems online — uptime in progress" },
     ],
@@ -499,6 +507,7 @@ const en: Dictionary = {
           "Python",
           "Flask",
           "FastAPI",
+          "Node.js",
           "React",
           "TypeScript",
           "Socket.IO",
@@ -531,7 +540,13 @@ const en: Dictionary = {
   projects: {
     kicker: "Portfolio",
     heading: "Projects",
-    lead: "GitHub repositories — industrial IoT, corporate systems, APIs, and web apps in production.",
+    lead: "11 GitHub repositories — industrial IoT, corporate systems, APIs, and web apps.",
+    groupLabels: {
+      amasa: "AMASA & IoT",
+      corporate: "Corporate",
+      commercial: "Commercial & clients",
+      personal: "Personal & portfolio",
+    },
     hiddenTitle: "Hidden project",
     revealHint: "Click to view details",
     closeHint: "Click to minimize",
