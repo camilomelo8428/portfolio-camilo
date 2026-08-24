@@ -38,17 +38,20 @@ export function Projects() {
           {t.projects.items.map((project, index) => {
             const isOpen = expanded.has(index);
             const images = getProjectImages(project.name);
+            const cover = images[0];
+            const alt = `${project.name} — ${t.projects.imageAltSuffix}`;
 
             return (
               <RevealOnScroll key={project.name} delay={index * 50}>
                 <article
                   className={`project-card ${isOpen ? "project-card--open" : "project-card--compact"}`}
                 >
-                  {images.length > 0 ? (
-                    <ProjectGallery
-                      images={images}
-                      alt={`${project.name} — ${t.projects.imageAltSuffix}`}
-                    />
+                  {cover && !isOpen ? (
+                    <ProjectGallery images={[cover]} alt={alt} interactive={false} />
+                  ) : null}
+
+                  {isOpen && images.length > 0 ? (
+                    <ProjectGallery images={images} alt={alt} interactive />
                   ) : null}
 
                   <button

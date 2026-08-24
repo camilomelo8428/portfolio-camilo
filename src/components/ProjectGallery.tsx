@@ -6,19 +6,27 @@ import { assetUrl } from "@/lib/assets";
 type ProjectGalleryProps = {
   images: string[];
   alt: string;
+  /** Se false, mostra so a capa sem controles. */
+  interactive?: boolean;
 };
 
 /**
- * Galeria simples com setas e indicadores para o card do projeto.
+ * Galeria do projeto: capa unica ou carrossel com navegacao.
  */
-export function ProjectGallery({ images, alt }: ProjectGalleryProps) {
+export function ProjectGallery({
+  images,
+  alt,
+  interactive = true,
+}: ProjectGalleryProps) {
   const [index, setIndex] = useState(0);
   const total = images.length;
-  const current = images[index] ?? images[0];
+  const current = images[interactive ? index : 0] ?? images[0];
 
   if (!current) {
     return null;
   }
+
+  const showControls = interactive && total > 1;
 
   const goPrevious = () => {
     setIndex((previous) => (previous - 1 + total) % total);
@@ -29,18 +37,22 @@ export function ProjectGallery({ images, alt }: ProjectGalleryProps) {
   };
 
   return (
-    <div className="project-card__media project-card__media--gallery">
+    <div
+      className={`project-card__media ${showControls ? "project-card__media--gallery" : ""}`}
+    >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={assetUrl(current)}
-        alt={`${alt} (${index + 1}/${total})`}
+        alt={
+          showControls ? `${alt} (${index + 1}/${total})` : alt
+        }
         width={1200}
         height={675}
         loading="lazy"
         className="project-card__image"
       />
 
-      {total > 1 ? (
+      {showControls ? (
         <>
           <button
             type="button"

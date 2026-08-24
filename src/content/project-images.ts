@@ -1,6 +1,7 @@
 /**
  * Imagens dos projetos em /public/projects/.
- * Uma string = capa unica; array = galeria (carrossel).
+ * Uma string = capa unica; array = galeria ao expandir detalhes.
+ * Sem imagem = card so com texto (sem placeholder quebrado).
  */
 export const PROJECT_IMAGES: Record<string, string | string[]> = {
   "Sensores AMASA": [
@@ -12,10 +13,8 @@ export const PROJECT_IMAGES: Record<string, string | string[]> = {
     "/projects/sensores-amasa-6.jpg",
     "/projects/sensores-amasa-7.jpg",
   ],
-  "JBFlexa Chat": "/projects/jbflexa-chat.svg",
-  "Frequência AMASA RPM": "/projects/frequencia-amasa-rpm.svg",
-  "Questionário Satisfação AMASA": "/projects/questionario-amasa.svg",
-  "Lina IA Local": "/projects/lina-ia-local.svg",
+  // Adicione quando tiver screenshots reais, ex.:
+  // "JBFlexa Chat": "/projects/jbflexa-chat.webp",
 };
 
 /**
