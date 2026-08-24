@@ -316,7 +316,7 @@ const pt: Dictionary = {
         ],
       },
       {
-        company: "MASTERDADOS",
+        company: "Eng Tec",
         role: "Analista de TI / Programador",
         period: "2015 – 2018",
         bullets: [
@@ -551,7 +551,7 @@ const en: Dictionary = {
         ],
       },
       {
-        company: "MASTERDADOS",
+        company: "Eng Tec",
         role: "IT Analyst / Developer",
         period: "2015 – 2018",
         bullets: [

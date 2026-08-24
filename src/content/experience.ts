@@ -25,7 +25,7 @@ export const experience = [
     ],
   },
   {
-    company: "MASTERDADOS",
+    company: "Eng Tec",
     role: "Analista de TI / Programador",
     period: "2015 – 2018",
     bullets: [
