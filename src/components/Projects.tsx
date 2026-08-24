@@ -34,7 +34,7 @@ export function Projects() {
           </p>
         </RevealOnScroll>
 
-        <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="projects-grid mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {t.projects.items.map((project, index) => {
             const isOpen = expanded.has(index);
             const images = getProjectImages(project.name);
@@ -42,16 +42,30 @@ export function Projects() {
             const alt = `${project.name} — ${t.projects.imageAltSuffix}`;
 
             return (
-              <RevealOnScroll key={project.name} delay={index * 50}>
+              <RevealOnScroll
+                key={project.name}
+                delay={index * 50}
+                className="h-auto self-start"
+              >
                 <article
                   className={`project-card ${isOpen ? "project-card--open" : "project-card--compact"}`}
                 >
                   {cover && !isOpen ? (
-                    <ProjectGallery images={[cover]} alt={alt} interactive={false} />
+                    <ProjectGallery
+                      images={[cover]}
+                      alt={alt}
+                      interactive={false}
+                    />
                   ) : null}
 
                   {isOpen && images.length > 0 ? (
-                    <ProjectGallery images={images} alt={alt} interactive />
+                    <ProjectGallery
+                      images={images}
+                      alt={alt}
+                      interactive
+                      expandImageLabel={t.projects.expandImageLabel}
+                      closeLightboxLabel={t.projects.closeLightboxLabel}
+                    />
                   ) : null}
 
                   <button
