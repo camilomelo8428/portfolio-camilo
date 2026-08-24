@@ -1,9 +1,17 @@
 /**
  * Imagens dos projetos em /public/projects/.
- * Troque o arquivo mantendo o mesmo nome (recomendado: .webp ou .jpg, 1200×675px).
+ * Uma string = capa unica; array = galeria (carrossel).
  */
-export const PROJECT_IMAGES: Record<string, string> = {
-  "Sensores AMASA": "/projects/sensores-amasa.svg",
+export const PROJECT_IMAGES: Record<string, string | string[]> = {
+  "Sensores AMASA": [
+    "/projects/sensores-amasa-1.jpg",
+    "/projects/sensores-amasa-2.jpg",
+    "/projects/sensores-amasa-3.jpg",
+    "/projects/sensores-amasa-4.jpg",
+    "/projects/sensores-amasa-5.jpg",
+    "/projects/sensores-amasa-6.jpg",
+    "/projects/sensores-amasa-7.jpg",
+  ],
   "JBFlexa Chat": "/projects/jbflexa-chat.svg",
   "Frequência AMASA RPM": "/projects/frequencia-amasa-rpm.svg",
   "Questionário Satisfação AMASA": "/projects/questionario-amasa.svg",
@@ -11,7 +19,24 @@ export const PROJECT_IMAGES: Record<string, string> = {
 };
 
 /**
- * Retorna o caminho da imagem de um projeto, se existir.
+ * Normaliza caminhos de imagem de um projeto.
+ *
+ * Args:
+ *   projectName: Nome exibido do projeto.
+ *
+ * Returns:
+ *   Lista de caminhos relativos a /public (pode ser vazia).
+ */
+export function getProjectImages(projectName: string): string[] {
+  const value = PROJECT_IMAGES[projectName];
+  if (!value) {
+    return [];
+  }
+  return Array.isArray(value) ? value : [value];
+}
+
+/**
+ * Retorna a capa (primeira imagem) do projeto.
  *
  * Args:
  *   projectName: Nome exibido do projeto.
@@ -20,5 +45,5 @@ export const PROJECT_IMAGES: Record<string, string> = {
  *   Caminho relativo a /public ou undefined.
  */
 export function getProjectImage(projectName: string): string | undefined {
-  return PROJECT_IMAGES[projectName];
+  return getProjectImages(projectName)[0];
 }
