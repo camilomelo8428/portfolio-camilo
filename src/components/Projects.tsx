@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { getProjectImage } from "@/content/project-images";
 import { useLanguage } from "@/i18n/LanguageProvider";
+import { assetUrl } from "@/lib/assets";
 
 export function Projects() {
   const { t } = useLanguage();
@@ -35,12 +37,27 @@ export function Projects() {
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {t.projects.items.map((project, index) => {
             const isOpen = expanded.has(index);
+            const imagePath = getProjectImage(project.name);
 
             return (
               <RevealOnScroll key={project.name} delay={index * 50}>
                 <article
                   className={`project-card ${isOpen ? "project-card--open" : "project-card--compact"}`}
                 >
+                  {imagePath ? (
+                    <div className="project-card__media">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={assetUrl(imagePath)}
+                        alt={`${project.name} — ${t.projects.imageAltSuffix}`}
+                        width={1200}
+                        height={675}
+                        loading="lazy"
+                        className="project-card__image"
+                      />
+                    </div>
+                  ) : null}
+
                   <button
                     type="button"
                     className="project-card__trigger"

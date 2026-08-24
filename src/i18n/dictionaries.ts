@@ -48,6 +48,7 @@ export type Dictionary = {
     stackLabel: string;
     productionLabel: string;
     codeLinkLabel: string;
+    imageAltSuffix: string;
     items: {
       name: string;
       summary: string;
@@ -218,6 +219,7 @@ const pt: Dictionary = {
     stackLabel: "Stack",
     productionLabel: "Produção",
     codeLinkLabel: "Ver código",
+    imageAltSuffix: "captura do projeto",
     items: [
       {
         name: "Sensores AMASA",
@@ -454,6 +456,7 @@ const en: Dictionary = {
     stackLabel: "Stack",
     productionLabel: "Production",
     codeLinkLabel: "View code",
+    imageAltSuffix: "project screenshot",
     items: [
       {
         name: "Sensores AMASA",
