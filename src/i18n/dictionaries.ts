@@ -300,11 +300,12 @@ const pt: Dictionary = {
         ],
       },
       {
-        company: "RR Chevrolet",
-        role: "Analista de Suporte",
+        company: "Solus IT",
+        role: "Analista de TI",
         period: "2023 – 2024",
         bullets: [
-          "500+ incidentes resolvidos (−40% no tempo médio) e 300+ atendimentos remotos (95% sem deslocamento).",
+          "Suporte técnico N1/N2: estações, rede, impressoras e sistemas corporativos; triagem e resolução de incidentes.",
+          "500+ chamados atendidos (−40% no tempo médio) e 300+ atendimentos remotos (95% sem deslocamento).",
         ],
       },
       {
@@ -535,11 +536,12 @@ const en: Dictionary = {
         ],
       },
       {
-        company: "RR Chevrolet",
-        role: "Support Analyst",
+        company: "Solus IT",
+        role: "IT Analyst",
         period: "2023 – 2024",
         bullets: [
-          "500+ incidents resolved (−40% mean time) and 300+ remote sessions (95% without on-site travel).",
+          "Tier 1/2 support: workstations, networking, printers, and corporate systems; incident triage and resolution.",
+          "500+ tickets handled (−40% mean response time) and 300+ remote sessions (95% resolved without on-site travel).",
         ],
       },
       {

@@ -9,11 +9,12 @@ export const experience = [
     ],
   },
   {
-    company: "RR Chevrolet",
-    role: "Analista de Suporte",
+    company: "Solus IT",
+    role: "Analista de TI",
     period: "2023 – 2024",
     bullets: [
-      "500+ incidentes resolvidos (−40% no tempo médio) e 300+ atendimentos remotos (95% sem deslocamento).",
+      "Suporte técnico N1/N2: estações, rede, impressoras e sistemas corporativos; triagem e resolução de incidentes.",
+      "500+ chamados atendidos (−40% no tempo médio) e 300+ atendimentos remotos (95% sem deslocamento).",
     ],
   },
   {
