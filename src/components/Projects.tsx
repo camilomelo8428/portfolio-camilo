@@ -83,7 +83,10 @@ function ProjectCard({
             <p className="project-card__hint">{labels.revealHint}</p>
           </div>
         ) : (
-          <div className="project-card__expanded text-left">
+          <div
+            key={`${project.name}-expanded`}
+            className="project-card__expanded text-left"
+          >
             <p className="mt-3 text-sm leading-relaxed text-ink-muted">
               {project.summary}
             </p>
