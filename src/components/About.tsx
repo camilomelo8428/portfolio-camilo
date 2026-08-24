@@ -1,21 +1,33 @@
-import { profile } from "@/content/profile";
+"use client";
+
+import { AboutTerminal } from "@/components/AboutTerminal";
+import { RevealOnScroll } from "@/components/RevealOnScroll";
+import { useLanguage } from "@/i18n/LanguageProvider";
 
 export function About() {
+  const { t } = useLanguage();
+
   return (
-    <section id="sobre" className="border-b border-line bg-surface">
+    <section id="sobre" className="section-shell border-b border-line bg-surface">
       <div className="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-20">
-        <p className="font-[family-name:var(--font-display)] text-xs uppercase tracking-[0.2em] text-steel">
-          Sobre
-        </p>
-        <h2 className="mt-3 max-w-2xl font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-ink md:text-4xl">
-          Por trás da operação de TI
-        </h2>
-        <div className="mt-8 grid gap-8 md:grid-cols-2">
-          {profile.about.map((paragraph) => (
-            <p key={paragraph.slice(0, 24)} className="text-base leading-relaxed text-ink-muted md:text-lg">
-              {paragraph}
-            </p>
-          ))}
+        <RevealOnScroll>
+          <h2 className="font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight text-ink md:text-4xl">
+            {t.about.heading}
+          </h2>
+        </RevealOnScroll>
+
+        <div className="mt-8 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+          <RevealOnScroll delay={80}>
+            <div className="space-y-5 text-base leading-relaxed text-ink-muted md:text-lg">
+              {t.about.paragraphs.map((paragraph) => (
+                <p key={paragraph.slice(0, 32)}>{paragraph}</p>
+              ))}
+            </div>
+          </RevealOnScroll>
+
+          <RevealOnScroll delay={140}>
+            <AboutTerminal />
+          </RevealOnScroll>
         </div>
       </div>
     </section>

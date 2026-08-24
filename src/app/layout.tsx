@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Barlow_Condensed, IBM_Plex_Sans } from "next/font/google";
 import { Header } from "@/components/Header";
+import { Providers } from "@/components/Providers";
 import "./globals.css";
 
 const display = Barlow_Condensed({
@@ -16,9 +17,9 @@ const body = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Camilo Lessa | Supervisor de TI e Programador",
+  title: "Camilo Lessa | Desenvolvedor Full Stack & Supervisor de TI",
   description:
-    "Portfólio de Camilo Lessa de Melo — infraestrutura, IoT industrial e sistemas corporativos em produção.",
+    "Portfólio de Camilo Lessa de Melo — desenvolvimento full stack, infraestrutura, IoT industrial e sistemas corporativos em produção.",
 };
 
 export default function RootLayout({
@@ -29,8 +30,10 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`${display.variable} ${body.variable} h-full`}>
       <body className="min-h-full antialiased">
-        <Header />
-        {children}
+        <Providers>
+          <Header />
+          {children}
+        </Providers>
       </body>
     </html>
   );

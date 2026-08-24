@@ -23,6 +23,19 @@
 # misc
 .DS_Store
 *.pem
+WhatsApp Image*
+grok-image*
+grok-video*
+_make_avatar.py
+_crop_avatar.py
+_fix_speaker.py
+_remove_bg.py
+_process_video.py
+_recolor_video.py
+_fix_cutout.py
+public/_preview*
+public/_diag*
+public/hero-raw.mp4
 
 # debug
 npm-debug.log*

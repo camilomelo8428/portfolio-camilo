@@ -1,7 +1,7 @@
 export const experience = [
   {
     company: "AMASA — Amazônia Indústria Alimentícias",
-    role: "Supervisor de TI e Programador",
+    role: "Supervisor de TI / Desenvolvedor Full Stack",
     period: "2025 – 2026 · Atual",
     bullets: [
       "Promovido a Supervisor de TI; liderança da área e entrega de sistemas em produção: Sensores AMASA, Frequência-amasa e JBFlexa Chat.",
