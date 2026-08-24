@@ -214,7 +214,7 @@ const pt: Dictionary = {
   projects: {
     kicker: "Portfólio",
     heading: "Projetos",
-    lead: "Sistemas entregues em produção — IoT, plataformas corporativas e automação operacional.",
+    lead: "Repositórios no GitHub — IoT industrial, sistemas corporativos, APIs e aplicações web em produção.",
     hiddenTitle: "Projeto oculto",
     revealHint: "Clique para ver detalhes",
     closeHint: "Clique para minimizar",
@@ -239,16 +239,16 @@ const pt: Dictionary = {
         ],
       },
       {
-        name: "JBFlexa Chat",
+        name: "Frequência AMASA RPM",
         summary:
-          "Plataforma corporativa de comunicação e suporte: chat em tempo real, help desk com SLA, base de conhecimento, tarefas e estoque.",
-        stack: "Flask, Socket.IO, SQLAlchemy, PyInstaller",
-        production: "Ambiente corporativo",
-        href: "https://github.com/camilomelo8428/jbflexa-chat",
+          "Documentação e referências de hardware para leitura de RPM em embarcações: ESP8266, sensor pick-up, condicionamento de sinal e guias PCB.",
+        stack: "ESP8266, Python, EasyEDA, MAX9924",
+        production: "Embarcações AMASA",
+        href: "https://github.com/camilomelo8428/frequencia-amasa-rpm",
         highlights: [
-          "Chat real-time e gestão de chamados",
-          "Executável Windows com atualização automática via GitHub",
-          "Admin, autenticação e relatórios operacionais",
+          "Esquemas de proteção e ligação do sensor RPM",
+          "Scripts de automação e leitura de frequência",
+          "Integração com firmware Sensores AMASA",
         ],
       },
       {
@@ -257,12 +257,12 @@ const pt: Dictionary = {
           "Sistema corporativo de controle de frequência de funcionários: cadastro por setor e linha de produção, registro diário de presença, painel web PWA e relatórios operacionais.",
         stack: "FastAPI, SQLModel, SQLite, Typer, ReportLab, PWA",
         production: "AMASA",
+        href: "https://github.com/camilomelo8428/frequencia-amasa",
         highlights: [
           "Registro diário de presença, atraso, férias, atestado e afastamentos",
           "Painel web responsivo (PWA) com autenticação e API REST documentada",
           "Relatórios diários, semanais e mensais em PDF, Excel e CSV por setor/linha",
         ],
-        href: "https://github.com/camilomelo8428/frequencia-amasa",
       },
       {
         name: "Questionário Satisfação AMASA",
@@ -278,6 +278,19 @@ const pt: Dictionary = {
         ],
       },
       {
+        name: "JBFlexa Chat",
+        summary:
+          "Plataforma corporativa de comunicação e suporte: chat em tempo real, help desk com SLA, base de conhecimento, tarefas e estoque.",
+        stack: "Flask, Socket.IO, SQLAlchemy, PyInstaller",
+        production: "Ambiente corporativo",
+        href: "https://github.com/camilomelo8428/jbflexa-chat",
+        highlights: [
+          "Chat real-time e gestão de chamados",
+          "Executável Windows com atualização automática via GitHub",
+          "Admin, autenticação e relatórios operacionais",
+        ],
+      },
+      {
         name: "Lina IA Local",
         summary:
           "Assistente conversacional com LLM 100% offline: memória episódica e semântica, avatar 3D com emoções e aceleração GPU via llamafile.",
@@ -288,6 +301,71 @@ const pt: Dictionary = {
           "Inferência local Qwen3 com API OpenAI-compatible",
           "Memória persistente em camadas com consolidação via LLM",
           "Avatar 3D animado que reflete emoções da conversa",
+        ],
+      },
+      {
+        name: "API Pedidos",
+        summary:
+          "API REST em Node.js para CRUD de pedidos com autenticação JWT, persistência SQLite e interface web integrada para login e gestão.",
+        stack: "Node.js, Express, SQLite, JWT, Swagger",
+        production: "Projeto de portfólio",
+        href: "https://github.com/camilomelo8428/api-pedidos",
+        highlights: [
+          "Registro e login de usuários com token JWT",
+          "CRUD completo de pedidos e itens",
+          "Interface web e documentação Swagger/OpenAPI",
+        ],
+      },
+      {
+        name: "Estacionamento App",
+        summary:
+          "Sistema web para gestão de estacionamentos: dashboard financeiro, vagas em tempo real, mensalistas, tickets e relatórios.",
+        stack: "React, TypeScript, Supabase, Ant Design, Recharts",
+        production: "Projeto comercial",
+        href: "https://github.com/camilomelo8428/estacionamento-app",
+        highlights: [
+          "Dashboard financeiro com gráficos e métricas",
+          "Controle de vagas, mensalistas e emissão de tickets",
+          "Gestão de funcionários e configurações do estabelecimento",
+        ],
+      },
+      {
+        name: "Barbearia App 2",
+        summary:
+          "Sistema de gestão para barbearias: agendamentos, clientes e operação do salão com painel web responsivo e backend Supabase.",
+        stack: "React, TypeScript, Vite, Supabase, Tailwind CSS",
+        production: "Projeto comercial",
+        href: "https://github.com/camilomelo8428/barbearia-app-2",
+        highlights: [
+          "Gestão de agendamentos e fluxo do salão",
+          "Autenticação e dados em tempo real via Supabase",
+          "Deploy configurado para Vercel",
+        ],
+      },
+      {
+        name: "BeautyStock",
+        summary:
+          "Controle de estoque para salões de beleza: entradas e saídas de produtos, alertas de estoque baixo e dashboard operacional.",
+        stack: "React, TypeScript, Vite, Chakra UI, Supabase",
+        production: "Studio Delas",
+        href: "https://github.com/camilomelo8428/controle-estoque-studio-delas",
+        highlights: [
+          "Login para administradores e funcionários",
+          "Registro de movimentações e categorias de produtos",
+          "Alertas de estoque mínimo e dashboard responsivo",
+        ],
+      },
+      {
+        name: "Studio Delas Beauty",
+        summary:
+          "Plataforma web para salão de beleza: agendamentos, gestão de clientes e operação do negócio com UI moderna e Supabase.",
+        stack: "React, TypeScript, Vite, Radix UI, Supabase",
+        production: "Studio Delas",
+        href: "https://github.com/camilomelo8428/studio-delas-beauty-artist",
+        highlights: [
+          "Interface moderna com componentes Radix UI",
+          "Backend Supabase com autenticação e dados em tempo real",
+          "Deploy Docker/Vercel e gráficos operacionais",
         ],
       },
     ],
@@ -453,7 +531,7 @@ const en: Dictionary = {
   projects: {
     kicker: "Portfolio",
     heading: "Projects",
-    lead: "Systems delivered to production — IoT, corporate platforms, and operational automation.",
+    lead: "GitHub repositories — industrial IoT, corporate systems, APIs, and web apps in production.",
     hiddenTitle: "Hidden project",
     revealHint: "Click to view details",
     closeHint: "Click to minimize",
@@ -478,16 +556,16 @@ const en: Dictionary = {
         ],
       },
       {
-        name: "JBFlexa Chat",
+        name: "Frequência AMASA RPM",
         summary:
-          "Corporate communication and support platform: real-time chat, SLA help desk, knowledge base, tasks, and inventory.",
-        stack: "Flask, Socket.IO, SQLAlchemy, PyInstaller",
-        production: "Corporate environment",
-        href: "https://github.com/camilomelo8428/jbflexa-chat",
+          "Hardware documentation and references for vessel RPM reading: ESP8266, pick-up sensor, signal conditioning, and PCB guides.",
+        stack: "ESP8266, Python, EasyEDA, MAX9924",
+        production: "AMASA vessels",
+        href: "https://github.com/camilomelo8428/frequencia-amasa-rpm",
         highlights: [
-          "Real-time chat and ticket management",
-          "Windows executable with auto-update via GitHub",
-          "Admin, authentication, and operational reports",
+          "RPM sensor protection and wiring schematics",
+          "Automation scripts and frequency reading",
+          "Integration with Sensores AMASA firmware",
         ],
       },
       {
@@ -496,12 +574,12 @@ const en: Dictionary = {
           "Corporate employee attendance system: registration by department and production line, daily presence tracking, PWA web panel, and operational reports.",
         stack: "FastAPI, SQLModel, SQLite, Typer, ReportLab, PWA",
         production: "AMASA",
+        href: "https://github.com/camilomelo8428/frequencia-amasa",
         highlights: [
           "Daily tracking of presence, lateness, vacation, medical leave, and absences",
           "Responsive web panel (PWA) with authentication and documented REST API",
           "Daily, weekly, and monthly reports in PDF, Excel, and CSV by department/line",
         ],
-        href: "https://github.com/camilomelo8428/frequencia-amasa",
       },
       {
         name: "Questionário Satisfação AMASA",
@@ -517,6 +595,19 @@ const en: Dictionary = {
         ],
       },
       {
+        name: "JBFlexa Chat",
+        summary:
+          "Corporate communication and support platform: real-time chat, SLA help desk, knowledge base, tasks, and inventory.",
+        stack: "Flask, Socket.IO, SQLAlchemy, PyInstaller",
+        production: "Corporate environment",
+        href: "https://github.com/camilomelo8428/jbflexa-chat",
+        highlights: [
+          "Real-time chat and ticket management",
+          "Windows executable with auto-update via GitHub",
+          "Admin, authentication, and operational reports",
+        ],
+      },
+      {
         name: "Lina IA Local",
         summary:
           "Conversational assistant with 100% offline LLM: episodic and semantic memory, 3D avatar with emotions, and GPU acceleration via llamafile.",
@@ -527,6 +618,71 @@ const en: Dictionary = {
           "Local Qwen3 inference with OpenAI-compatible API",
           "Layered persistent memory with LLM consolidation",
           "Animated 3D avatar reflecting conversation emotions",
+        ],
+      },
+      {
+        name: "API Pedidos",
+        summary:
+          "Node.js REST API for order CRUD with JWT authentication, SQLite persistence, and an integrated web UI for login and management.",
+        stack: "Node.js, Express, SQLite, JWT, Swagger",
+        production: "Portfolio project",
+        href: "https://github.com/camilomelo8428/api-pedidos",
+        highlights: [
+          "User registration and login with JWT tokens",
+          "Full order and item CRUD",
+          "Web interface and Swagger/OpenAPI documentation",
+        ],
+      },
+      {
+        name: "Estacionamento App",
+        summary:
+          "Web system for parking lot management: financial dashboard, real-time spots, monthly passes, tickets, and reports.",
+        stack: "React, TypeScript, Supabase, Ant Design, Recharts",
+        production: "Commercial project",
+        href: "https://github.com/camilomelo8428/estacionamento-app",
+        highlights: [
+          "Financial dashboard with charts and metrics",
+          "Spot control, monthly passes, and ticket issuance",
+          "Staff management and business settings",
+        ],
+      },
+      {
+        name: "Barbearia App 2",
+        summary:
+          "Barbershop management system: appointments, clients, and salon operations with a responsive web panel and Supabase backend.",
+        stack: "React, TypeScript, Vite, Supabase, Tailwind CSS",
+        production: "Commercial project",
+        href: "https://github.com/camilomelo8428/barbearia-app-2",
+        highlights: [
+          "Appointment management and salon workflow",
+          "Authentication and real-time data via Supabase",
+          "Vercel deployment ready",
+        ],
+      },
+      {
+        name: "BeautyStock",
+        summary:
+          "Inventory control for beauty salons: product in/out tracking, low-stock alerts, and an operational dashboard.",
+        stack: "React, TypeScript, Vite, Chakra UI, Supabase",
+        production: "Studio Delas",
+        href: "https://github.com/camilomelo8428/controle-estoque-studio-delas",
+        highlights: [
+          "Login for administrators and staff",
+          "Movement tracking and product categories",
+          "Minimum stock alerts and responsive dashboard",
+        ],
+      },
+      {
+        name: "Studio Delas Beauty",
+        summary:
+          "Web platform for a beauty salon: appointments, client management, and business operations with a modern UI and Supabase.",
+        stack: "React, TypeScript, Vite, Radix UI, Supabase",
+        production: "Studio Delas",
+        href: "https://github.com/camilomelo8428/studio-delas-beauty-artist",
+        highlights: [
+          "Modern interface with Radix UI components",
+          "Supabase backend with authentication and real-time data",
+          "Docker/Vercel deployment and operational charts",
         ],
       },
     ],
