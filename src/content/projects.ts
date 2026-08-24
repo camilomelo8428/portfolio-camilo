@@ -36,17 +36,17 @@ export const projects: Project[] = [
     href: "https://github.com/camilomelo8428/jbflexa-chat",
   },
   {
-    name: "Frequência AMASA RPM",
+    name: "Frequência AMASA",
     summary:
-      "Documentação e referências de hardware para leitura de RPM em embarcações: ESP8266, sensor pick-up, condicionamento de sinal e guias PCB.",
-    stack: "ESP8266, Python, EasyEDA, MAX9924",
-    production: "Embarcações AMASA",
+      "Sistema corporativo de controle de frequência de funcionários: cadastro por setor e linha de produção, registro diário de presença, painel web PWA e relatórios operacionais.",
+    stack: "FastAPI, SQLModel, SQLite, Typer, ReportLab, PWA",
+    production: "AMASA",
     highlights: [
-      "Esquemas de proteção e ligação do sensor RPM",
-      "Scripts de automação e leitura de frequência",
-      "Integração com firmware Sensores AMASA",
+      "Registro diário de presença, atraso, férias, atestado e afastamentos",
+      "Painel web responsivo (PWA) com autenticação e API REST documentada",
+      "Relatórios diários, semanais e mensais em PDF, Excel e CSV por setor/linha",
     ],
-    href: "https://github.com/camilomelo8428/frequencia-amasa-rpm",
+    href: "https://github.com/camilomelo8428/frequencia-amasa",
   },
   {
     name: "Questionário Satisfação AMASA",
