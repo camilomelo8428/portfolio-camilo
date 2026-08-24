@@ -49,15 +49,16 @@ export const projects: Project[] = [
     href: "https://github.com/camilomelo8428/frequencia-amasa-rpm",
   },
   {
-    name: "Backup Pro Amasa",
+    name: "Lina IA Local",
     summary:
-      "Backup corporativo de arquivos e SQL Server com agendamento, retenção e sincronização em Google Drive (OAuth).",
-    stack: "PyQt6, SQL Server, Google Drive API",
-    production: "AMASA",
+      "Assistente conversacional com LLM 100% offline: memória episódica e semântica, avatar 3D com emoções e aceleração GPU via llamafile.",
+    stack: "Python, Gradio, llamafile, Qwen3, Three.js",
+    production: "Projeto pessoal / R&D",
     highlights: [
-      "Backup automático com múltiplos destinos",
-      "Upload em nuvem com OAuth e retenção configurável",
-      "Operação em bandeja do sistema Windows",
+      "Inferência local Qwen3 com API OpenAI-compatible",
+      "Memória persistente em camadas com consolidação via LLM",
+      "Avatar 3D animado que reflete emoções da conversa",
     ],
+    href: "https://github.com/camilomelo8428/lina-ia-local",
   },
 ];
