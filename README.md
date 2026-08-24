@@ -1,6 +1,6 @@
 # Portfólio — Camilo Lessa de Melo
 
-Site estático do portfólio profissional: **Supervisor de TI e Programador**.
+Site estático do portfólio profissional: **Gestor de TI e Programador**.
 
 ## Stack
 

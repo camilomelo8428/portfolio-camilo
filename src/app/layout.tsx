@@ -18,7 +18,7 @@ const body = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Camilo Lessa | Desenvolvedor Full Stack & Supervisor de TI",
+  title: "Camilo Lessa | Desenvolvedor Full Stack & Gestor de TI",
   description:
     "Portfólio de Camilo Lessa de Melo — desenvolvimento full stack, infraestrutura, IoT industrial e sistemas corporativos em produção.",
 };

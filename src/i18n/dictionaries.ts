@@ -117,7 +117,7 @@ const sharedProfile = {
 
 const pt: Dictionary = {
   meta: {
-    title: "Camilo Lessa | Desenvolvedor Full Stack & Supervisor de TI",
+    title: "Camilo Lessa | Desenvolvedor Full Stack & Gestor de TI",
     description:
       "Portfólio de Camilo Lessa de Melo — desenvolvimento full stack, infraestrutura, IoT industrial e sistemas corporativos em produção.",
   },
@@ -133,7 +133,7 @@ const pt: Dictionary = {
   hero: {
     badge: "Full Stack · Infra · IoT",
     roleLine1: "Desenvolvedor Full Stack &",
-    roleLine2: "Supervisor de TI",
+    roleLine2: "Gestor de TI",
     tagline:
       "Backend, frontend e infra — sistemas em produção, da fábrica ao código.",
     ctaProjects: "Ver projetos",
@@ -145,7 +145,7 @@ const pt: Dictionary = {
     kicker: "Sobre",
     heading: "Por trás da tela",
     paragraphs: [
-      "Me chamo Camilo, sou de Belém-PA e atuo como Desenvolvedor Full Stack e Supervisor de TI na AMASA. Gosto de entender o que acontece por trás da interface — da infraestrutura ao código que roda em produção.",
+      "Me chamo Camilo, sou de Belém-PA e atuo como Desenvolvedor Full Stack e Gestor de TI na AMASA. Gosto de entender o que acontece por trás da interface — da infraestrutura ao código que roda em produção.",
       "Entre sensores em embarcações, plataformas corporativas e automação no chão de fábrica, vou construindo sistemas que resolvem problemas reais. Ainda tem muito para aprender, e é isso que mais me move na área de tecnologia.",
     ],
     terminal: [
@@ -340,10 +340,10 @@ const pt: Dictionary = {
     items: [
       {
         company: "AMASA — Amazônia Indústria Alimentícias",
-        role: "Supervisor de TI / Desenvolvedor Full Stack",
+        role: "Gestor de TI / Desenvolvedor Full Stack",
         period: "2025 – 2026 · Atual",
         bullets: [
-          "Promovido a Supervisor de TI; liderança da área e entrega de sistemas em produção: Sensores AMASA, Frequência-amasa e JBFlexa Chat.",
+          "Promovido a Gestor de TI; liderança da área e entrega de sistemas em produção: Sensores AMASA, Frequência-amasa e JBFlexa Chat.",
           "Infraestrutura Proxmox/Endian e sustentação do ERP Fortes com alta disponibilidade.",
         ],
       },
@@ -395,7 +395,7 @@ const pt: Dictionary = {
 
 const en: Dictionary = {
   meta: {
-    title: "Camilo Lessa | Full Stack Developer & IT Supervisor",
+    title: "Camilo Lessa | Full Stack Developer & IT Manager",
     description:
       "Portfolio of Camilo Lessa de Melo — full stack development, infrastructure, industrial IoT, and production corporate systems.",
   },
@@ -411,7 +411,7 @@ const en: Dictionary = {
   hero: {
     badge: "Full Stack · Infra · IoT",
     roleLine1: "Full Stack Developer &",
-    roleLine2: "IT Supervisor",
+    roleLine2: "IT Manager",
     tagline:
       "Backend, frontend, and infrastructure — production systems from the plant floor to code.",
     ctaProjects: "View projects",
@@ -423,7 +423,7 @@ const en: Dictionary = {
     kicker: "About",
     heading: "Behind the screen",
     paragraphs: [
-      "I'm Camilo from Belém, Brazil — Full Stack Developer and IT Supervisor at AMASA. I like understanding what happens behind the interface, from infrastructure to production code.",
+      "I'm Camilo from Belém, Brazil — Full Stack Developer and IT Manager at AMASA. I like understanding what happens behind the interface, from infrastructure to production code.",
       "Between vessel sensors, corporate platforms, and shop-floor automation, I build systems that solve real problems. There's still a lot to learn, and that's what keeps me moving in tech.",
     ],
     terminal: [
@@ -618,10 +618,10 @@ const en: Dictionary = {
     items: [
       {
         company: "AMASA — Amazônia Indústria Alimentícias",
-        role: "IT Supervisor / Full Stack Developer",
+        role: "IT Manager / Full Stack Developer",
         period: "2025 – 2026 · Present",
         bullets: [
-          "Promoted to IT Supervisor; led the team and shipped production systems: Sensores AMASA, Frequência-amasa, and JBFlexa Chat.",
+          "Promoted to IT Manager; led the team and shipped production systems: Sensores AMASA, Frequência-amasa, and JBFlexa Chat.",
           "Proxmox/Endian infrastructure and Fortes ERP sustainment with high availability.",
         ],
       },
