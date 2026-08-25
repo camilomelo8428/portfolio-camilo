@@ -201,8 +201,8 @@ const pt: Dictionary = {
     statusStandby: "STANDBY · SOM OFF",
     statusOffline: "OFFLINE · MOTION REDUCE",
     memoryLabel: "MEM",
-    enableSound: "ATIVAR SOM",
-    muteSound: "MUDO",
+    enableSound: "ATIVAR MÚSICA",
+    muteSound: "MUDO MÚSICA",
     lines: [
       "> mem.load(portfolio)",
       "> sync outdoor://crt",
@@ -516,8 +516,8 @@ const en: Dictionary = {
     statusStandby: "STANDBY · SOUND OFF",
     statusOffline: "OFFLINE · MOTION REDUCE",
     memoryLabel: "MEM",
-    enableSound: "ENABLE SOUND",
-    muteSound: "MUTE",
+    enableSound: "ENABLE MUSIC",
+    muteSound: "MUTE MUSIC",
     lines: [
       "> mem.load(portfolio)",
       "> sync outdoor://crt",

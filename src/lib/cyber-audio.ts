@@ -1,6 +1,9 @@
 /**
  * SFX procedurais + tema musical do Audio Memory Robot.
  * Usa elemento <audio> no DOM para compatibilidade iOS/mobile.
+ *
+ * SFX de hover/click ficam SEMPRE ativos apos o primeiro gesto.
+ * O botao FAB controla apenas a musica-tema.
  */
 
 import { assetUrl } from "@/lib/assets";
@@ -14,7 +17,9 @@ export type CyberSfx =
   | "memory"
   | "success";
 
-const STORAGE_KEY = "portfolio-cyber-audio-enabled-v4";
+/** Preferencia so da musica-tema (SFX nao usa este flag). */
+const THEME_STORAGE_KEY = "portfolio-cyber-theme-enabled-v5";
+const LEGACY_STORAGE_KEY = "portfolio-cyber-audio-enabled-v4";
 const THEME_VOLUME = 0.1;
 const SFX_MASTER_VOLUME = 0.28;
 
@@ -46,13 +51,13 @@ function notifyAudioChange(): void {
 }
 
 /**
- * Engine de audio com tema em loop, mute persistente e unlock por gesto.
+ * Engine de audio: SFX sempre ativos; tema opcional via FAB.
  */
 export class CyberAudioEngine {
   private context: AudioContext | null = null;
   private master: GainNode | null = null;
   private theme: HTMLAudioElement | null = null;
-  private enabled = true;
+  private themeEnabled = true;
   private primed = false;
   private unlockPromise: Promise<void> | null = null;
   private lastHoverAt = 0;
@@ -63,20 +68,31 @@ export class CyberAudioEngine {
       return;
     }
 
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (stored !== null) {
-      this.enabled = stored === "1";
+    const themeStored = window.localStorage.getItem(THEME_STORAGE_KEY);
+    if (themeStored !== null) {
+      this.themeEnabled = themeStored === "1";
       return;
     }
 
-    this.enabled = true;
+    // Migra preferencia antiga (ligava/desligava tudo).
+    const legacy = window.localStorage.getItem(LEGACY_STORAGE_KEY);
+    if (legacy !== null) {
+      this.themeEnabled = legacy === "1";
+      window.localStorage.setItem(
+        THEME_STORAGE_KEY,
+        this.themeEnabled ? "1" : "0",
+      );
+      return;
+    }
+
+    this.themeEnabled = true;
   }
 
   /**
-   * Indica se o audio esta habilitado pelo usuario.
+   * Indica se a musica-tema esta habilitada pelo usuario.
    */
   isEnabled(): boolean {
-    return this.enabled;
+    return this.themeEnabled;
   }
 
   /**
@@ -84,7 +100,10 @@ export class CyberAudioEngine {
    */
   isThemeAudible(): boolean {
     return Boolean(
-      this.theme && !this.theme.paused && !this.theme.muted && this.enabled,
+      this.theme &&
+        !this.theme.paused &&
+        !this.theme.muted &&
+        this.themeEnabled,
     );
   }
 
@@ -109,7 +128,7 @@ export class CyberAudioEngine {
     element.setAttribute("playsinline", "true");
     element.setAttribute("webkit-playsinline", "true");
 
-    if (this.enabled) {
+    if (this.themeEnabled) {
       this.primeTheme();
     } else {
       element.pause();
@@ -118,17 +137,16 @@ export class CyberAudioEngine {
   }
 
   /**
-   * Habilita ou desabilita audio e persiste a preferencia.
+   * Liga/desliga apenas a musica-tema (SFX continuam ativos).
    *
    * Args:
-   *   active: True para ligar o som.
+   *   active: True para permitir o tema.
    */
   setEnabled(active: boolean): void {
-    this.enabled = active;
+    this.themeEnabled = active;
     if (typeof window !== "undefined") {
-      window.localStorage.setItem(STORAGE_KEY, active ? "1" : "0");
+      window.localStorage.setItem(THEME_STORAGE_KEY, active ? "1" : "0");
     }
-    this.syncMasterGain();
 
     if (!active) {
       this.muteTheme();
@@ -141,7 +159,7 @@ export class CyberAudioEngine {
    * Tenta autoplay mudo ao carregar (permitido pelos navegadores).
    */
   primeTheme(): void {
-    if (!this.enabled || !this.theme || typeof window === "undefined") {
+    if (!this.themeEnabled || !this.theme || typeof window === "undefined") {
       return;
     }
 
@@ -177,12 +195,15 @@ export class CyberAudioEngine {
       if (!this.context) {
         const AudioCtx =
           window.AudioContext ||
-          (window as unknown as { webkitAudioContext: typeof AudioContext })
-            .webkitAudioContext;
+          (
+            window as unknown as {
+              webkitAudioContext: typeof AudioContext;
+            }
+          ).webkitAudioContext;
         this.context = new AudioCtx();
         this.master = this.context.createGain();
         this.master.connect(this.context.destination);
-        this.syncMasterGain();
+        this.master.gain.value = SFX_MASTER_VOLUME;
       }
 
       if (this.context.state === "suspended") {
@@ -202,7 +223,7 @@ export class CyberAudioEngine {
    *   True se o tema ficou audivel.
    */
   unmuteFromGesture(): boolean {
-    if (!this.enabled || !this.theme || typeof window === "undefined") {
+    if (!this.themeEnabled || !this.theme || typeof window === "undefined") {
       return false;
     }
 
@@ -225,7 +246,7 @@ export class CyberAudioEngine {
   }
 
   /**
-   * Handler do botao FAB — chamado por eventos nativos (touch/click).
+   * Handler do botao FAB — so controla a musica-tema.
    *
    * Returns:
    *   Novo estado audivel do tema.
@@ -249,10 +270,11 @@ export class CyberAudioEngine {
   }
 
   /**
-   * Primeiro gesto na pagina — ativa som se preferencia estiver ligada.
+   * Primeiro gesto na pagina — libera SFX e, se preferido, o tema.
    */
   handlePageGesture(): void {
-    if (!this.enabled || this.isThemeAudible()) {
+    void this.unlock();
+    if (!this.themeEnabled || this.isThemeAudible()) {
       return;
     }
     this.unmuteFromGesture();
@@ -272,20 +294,24 @@ export class CyberAudioEngine {
   }
 
   /**
-   * Toca um efeito sonoro (no-op se desabilitado).
+   * Toca um efeito sonoro (sempre ativo; ignora mute do tema).
    *
    * Args:
    *   sfx: Identificador do som.
    *   allowReducedMotion: Se false, nao toca (acessibilidade).
    */
   play(sfx: CyberSfx, allowReducedMotion = true): void {
-    if (!allowReducedMotion || !this.enabled || typeof window === "undefined") {
+    if (!allowReducedMotion || typeof window === "undefined") {
       return;
     }
 
     void this.unlock().then(() => {
-      if (!this.context || !this.master || !this.enabled) {
+      if (!this.context || !this.master) {
         return;
+      }
+
+      if (this.master.gain.value !== SFX_MASTER_VOLUME) {
+        this.master.gain.value = SFX_MASTER_VOLUME;
       }
 
       if (sfx === "hover") {
@@ -329,12 +355,6 @@ export class CyberAudioEngine {
           break;
       }
     });
-  }
-
-  private syncMasterGain(): void {
-    if (this.master) {
-      this.master.gain.value = this.enabled ? SFX_MASTER_VOLUME : 0;
-    }
   }
 
   private tone(

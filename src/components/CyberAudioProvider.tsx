@@ -28,7 +28,8 @@ type CyberAudioContextValue = {
 const CyberAudioContext = createContext<CyberAudioContextValue | null>(null);
 
 /**
- * Provider de audio cyberpunk com mute e SFX globais.
+ * Provider de audio cyberpunk.
+ * SFX de hover/click ficam sempre ativos; o FAB so controla a musica.
  */
 export function CyberAudioProvider({ children }: { children: ReactNode }) {
   const reducedMotion = useReducedMotion();
@@ -49,7 +50,7 @@ export function CyberAudioProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("cyber-audio-changed", onChange);
   }, [syncFromEngine]);
 
-  // Primeiro toque em qualquer lugar da pagina ativa o som.
+  // Primeiro gesto libera AudioContext (SFX) e, se preferido, o tema.
   useEffect(() => {
     const onPageGesture = (event: Event) => {
       if (isAudioFabTarget(event.target)) {
@@ -79,15 +80,16 @@ export function CyberAudioProvider({ children }: { children: ReactNode }) {
     [reducedMotion],
   );
 
+  // Hover/click SEMPRE ativos (nao dependem do mute da musica).
   useEffect(() => {
-    if (!enabled || !themeReady) {
+    if (reducedMotion) {
       hoverTargetRef.current = null;
       return;
     }
 
     const onPointerDown = (event: PointerEvent) => {
       if (findInteractiveTarget(event.target)) {
-        cyberAudio.play("click", !reducedMotion);
+        cyberAudio.play("click", true);
       }
     };
 
@@ -100,7 +102,7 @@ export function CyberAudioProvider({ children }: { children: ReactNode }) {
         return;
       }
       hoverTargetRef.current = interactive;
-      cyberAudio.play("hover", !reducedMotion);
+      cyberAudio.play("hover", true);
     };
 
     const onPointerLeave = (event: PointerEvent) => {
@@ -120,7 +122,7 @@ export function CyberAudioProvider({ children }: { children: ReactNode }) {
       document.removeEventListener("pointerleave", onPointerLeave, true);
       hoverTargetRef.current = null;
     };
-  }, [enabled, reducedMotion, themeReady]);
+  }, [reducedMotion]);
 
   const value = useMemo(
     () => ({
