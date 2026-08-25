@@ -28,7 +28,6 @@ export const SFX_INTERACTIVE_SELECTOR = [
   ".tech-tile",
   ".tech-filter",
   ".project-card__trigger",
-  ".audio-robot__fab",
   ".terminal-outdoor__dot",
   ".lang-switch",
   "a[href^='mailto:']",
@@ -82,6 +81,13 @@ export class CyberAudioEngine {
   }
 
   /**
+   * Indica se o tema esta tocando agora.
+   */
+  isThemePlaying(): boolean {
+    return Boolean(this.theme && !this.theme.paused && !this.theme.ended);
+  }
+
+  /**
    * Habilita ou desabilita audio e persiste a preferencia.
    *
    * Args:
@@ -100,16 +106,26 @@ export class CyberAudioEngine {
   }
 
   /**
-   * Desbloqueia AudioContext apos gesto do usuario.
+   * Precarrega o MP3 do tema.
    */
-  async unlock(): Promise<void> {
+  preloadTheme(): void {
     if (typeof window === "undefined") {
       return;
     }
+    const theme = this.ensureTheme();
+    theme.load();
+  }
+
+  /**
+   * Desbloqueia AudioContext apos gesto do usuario.
+   */
+  unlock(): Promise<void> {
+    if (typeof window === "undefined") {
+      return Promise.resolve();
+    }
 
     if (this.unlockPromise) {
-      await this.unlockPromise;
-      return;
+      return this.unlockPromise;
     }
 
     this.unlockPromise = (async () => {
@@ -129,11 +145,39 @@ export class CyberAudioEngine {
       }
     })();
 
-    try {
-      await this.unlockPromise;
-    } finally {
+    return this.unlockPromise.finally(() => {
       this.unlockPromise = null;
+    });
+  }
+
+  /**
+   * Inicia o tema dentro do gesto (sync) — necessario no iOS/mobile.
+   *
+   * Returns:
+   *   True se tentou tocar o tema.
+   */
+  playThemeFromGesture(): boolean {
+    if (!this.enabled || typeof window === "undefined") {
+      return false;
     }
+
+    const theme = this.ensureTheme();
+    theme.volume = THEME_VOLUME;
+
+    if (!theme.paused) {
+      void this.unlock();
+      return true;
+    }
+
+    const playAttempt = theme.play();
+    if (playAttempt !== undefined) {
+      void playAttempt.catch(() => {
+        // Autoplay bloqueado — aguarda outro gesto.
+      });
+    }
+
+    void this.unlock();
+    return true;
   }
 
   /**
@@ -144,15 +188,8 @@ export class CyberAudioEngine {
       return;
     }
 
+    this.playThemeFromGesture();
     await this.unlock();
-    const theme = this.ensureTheme();
-    theme.volume = THEME_VOLUME;
-
-    try {
-      await theme.play();
-    } catch {
-      // Autoplay bloqueado — o gesto do botao ATIVAR SOM deve desbloquear.
-    }
   }
 
   /**
@@ -171,57 +208,57 @@ export class CyberAudioEngine {
    * Args:
    *   sfx: Identificador do som.
    */
-  async play(sfx: CyberSfx): Promise<void> {
+  play(sfx: CyberSfx): void {
     if (!this.enabled || typeof window === "undefined") {
       return;
     }
 
-    await this.unlock();
-
-    if (!this.context || !this.master || !this.enabled) {
-      return;
-    }
-
-    if (sfx === "hover") {
-      const now = performance.now();
-      if (now - this.lastHoverAt < 120) {
+    void this.unlock().then(() => {
+      if (!this.context || !this.master || !this.enabled) {
         return;
       }
-      this.lastHoverAt = now;
-    }
 
-    switch (sfx) {
-      case "click":
-        this.tone(920, 0.045, "square", 0.14);
-        this.tone(520, 0.06, "square", 0.08, 0.03);
-        break;
-      case "hover":
-        this.tone(1240, 0.028, "triangle", 0.05);
-        break;
-      case "beep":
-        this.tone(680, 0.07, "sine", 0.11);
-        break;
-      case "memory":
-        this.tone(480, 0.05, "triangle", 0.07);
-        this.tone(720, 0.06, "triangle", 0.06, 0.06);
-        break;
-      case "success":
-        this.tone(523, 0.07, "sine", 0.1);
-        this.tone(659, 0.08, "sine", 0.1, 0.06);
-        this.tone(784, 0.1, "sine", 0.11, 0.12);
-        break;
-      case "boot":
-        this.tone(180, 0.07, "sawtooth", 0.06);
-        this.tone(280, 0.07, "sawtooth", 0.07, 0.06);
-        this.tone(420, 0.09, "sawtooth", 0.08, 0.12);
-        this.tone(620, 0.1, "square", 0.07, 0.2);
-        break;
-      case "glitch":
-        this.noiseBurst(0.16, 0.12);
-        break;
-      default:
-        break;
-    }
+      if (sfx === "hover") {
+        const now = performance.now();
+        if (now - this.lastHoverAt < 120) {
+          return;
+        }
+        this.lastHoverAt = now;
+      }
+
+      switch (sfx) {
+        case "click":
+          this.tone(920, 0.045, "square", 0.14);
+          this.tone(520, 0.06, "square", 0.08, 0.03);
+          break;
+        case "hover":
+          this.tone(1240, 0.028, "triangle", 0.05);
+          break;
+        case "beep":
+          this.tone(680, 0.07, "sine", 0.11);
+          break;
+        case "memory":
+          this.tone(480, 0.05, "triangle", 0.07);
+          this.tone(720, 0.06, "triangle", 0.06, 0.06);
+          break;
+        case "success":
+          this.tone(523, 0.07, "sine", 0.1);
+          this.tone(659, 0.08, "sine", 0.1, 0.06);
+          this.tone(784, 0.1, "sine", 0.11, 0.12);
+          break;
+        case "boot":
+          this.tone(180, 0.07, "sawtooth", 0.06);
+          this.tone(280, 0.07, "sawtooth", 0.07, 0.06);
+          this.tone(420, 0.09, "sawtooth", 0.08, 0.12);
+          this.tone(620, 0.1, "square", 0.07, 0.2);
+          break;
+        case "glitch":
+          this.noiseBurst(0.16, 0.12);
+          break;
+        default:
+          break;
+      }
+    });
   }
 
   private ensureTheme(): HTMLAudioElement {
@@ -233,6 +270,7 @@ export class CyberAudioEngine {
     audio.loop = true;
     audio.preload = "auto";
     audio.volume = THEME_VOLUME;
+    audio.setAttribute("playsinline", "true");
     this.theme = audio;
     return audio;
   }
@@ -318,4 +356,20 @@ export function findInteractiveTarget(
     return null;
   }
   return target.closest(SFX_INTERACTIVE_SELECTOR);
+}
+
+/**
+ * Verifica se o alvo e o botao de audio.
+ *
+ * Args:
+ *   target: Elemento do evento.
+ *
+ * Returns:
+ *   True se for o FAB de audio.
+ */
+export function isAudioFabTarget(target: EventTarget | null): boolean {
+  if (!(target instanceof Element)) {
+    return false;
+  }
+  return Boolean(target.closest(".audio-robot__fab"));
 }

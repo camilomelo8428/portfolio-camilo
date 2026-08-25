@@ -36,34 +36,35 @@ function IconSoundOff() {
  */
 export function AudioMemoryRobot() {
   const { t } = useLanguage();
-  const { enabled, canUseAudio, enableSound, disableSound } = useCyberAudio();
+  const { enabled, themeReady, canUseAudio, toggleSound } = useCyberAudio();
 
-  const toggleLabel = enabled
-    ? t.audioRobot.muteSound
-    : t.audioRobot.enableSound;
+  const toggleLabel = !themeReady
+    ? t.audioRobot.enableSound
+    : enabled
+      ? t.audioRobot.muteSound
+      : t.audioRobot.enableSound;
 
-  const handleToggle = () => {
+  const handlePointerDown = (
+    event: React.PointerEvent<HTMLButtonElement>,
+  ) => {
+    event.stopPropagation();
     if (!canUseAudio) {
       return;
     }
-    if (enabled) {
-      disableSound();
-      return;
-    }
-    void enableSound();
+    toggleSound();
   };
 
   return (
     <aside
-      className={`audio-robot${enabled ? " is-live" : " is-muted"}`}
+      className={`audio-robot${enabled ? " is-live" : " is-muted"}${themeReady ? " is-playing" : " is-pending"}`}
       aria-label={t.audioRobot.label}
     >
       <button
         type="button"
         className="audio-robot__fab"
-        onClick={handleToggle}
+        onPointerDown={handlePointerDown}
         disabled={!canUseAudio}
-        aria-pressed={enabled}
+        aria-pressed={enabled && themeReady}
         aria-label={toggleLabel}
         title={toggleLabel}
       >

@@ -13,15 +13,18 @@ import {
 import {
   cyberAudio,
   findInteractiveTarget,
+  isAudioFabTarget,
   type CyberSfx,
 } from "@/lib/cyber-audio";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 type CyberAudioContextValue = {
   enabled: boolean;
+  themeReady: boolean;
   canUseAudio: boolean;
-  enableSound: () => Promise<void>;
+  unlockAndPlay: () => void;
   disableSound: () => void;
+  toggleSound: () => void;
   play: (sfx: CyberSfx) => void;
 };
 
@@ -34,93 +37,110 @@ export function CyberAudioProvider({ children }: { children: ReactNode }) {
   const reducedMotion = useReducedMotion();
   const canUseAudio = !reducedMotion;
   const [enabled, setEnabled] = useState(true);
+  const [themeReady, setThemeReady] = useState(false);
   const hoverTargetRef = useRef<Element | null>(null);
-  const themeStartedRef = useRef(false);
+
+  const markThemeReady = useCallback(() => {
+    setThemeReady(true);
+  }, []);
+
+  const unlockAndPlay = useCallback(() => {
+    if (!canUseAudio) {
+      return;
+    }
+
+    cyberAudio.setEnabled(true);
+    setEnabled(true);
+    cyberAudio.playThemeFromGesture();
+    markThemeReady();
+    cyberAudio.play("boot");
+  }, [canUseAudio, markThemeReady]);
 
   useEffect(() => {
     if (!canUseAudio) {
       cyberAudio.setEnabled(false);
       setEnabled(false);
+      setThemeReady(false);
       return;
     }
+
+    cyberAudio.preloadTheme();
     const next = cyberAudio.isEnabled();
     setEnabled(next);
-    if (!next) {
-      themeStartedRef.current = false;
-    }
+    setThemeReady(cyberAudio.isThemePlaying());
   }, [canUseAudio]);
 
-  // Som ativo por padrao: destrava tema no primeiro gesto do usuario.
+  // Primeiro gesto na pagina inicia o tema (exceto no FAB, que tem handler proprio).
   useEffect(() => {
-    if (!canUseAudio || !enabled || themeStartedRef.current) {
+    if (!canUseAudio || !enabled || themeReady) {
       return;
     }
 
-    const resumeTheme = () => {
-      if (themeStartedRef.current) {
+    const resumeTheme = (event: Event) => {
+      if (isAudioFabTarget(event.target)) {
         return;
       }
-      themeStartedRef.current = true;
-      void cyberAudio.unlock().then(() => cyberAudio.startTheme());
+      unlockAndPlay();
     };
 
-    const events: Array<keyof DocumentEventMap> = [
-      "pointerdown",
-      "keydown",
-      "touchstart",
-    ];
+    const options: AddEventListenerOptions = {
+      once: true,
+      passive: true,
+      capture: true,
+    };
 
-    events.forEach((eventName) => {
-      document.addEventListener(eventName, resumeTheme, {
-        once: true,
-        passive: true,
-      });
-    });
+    document.addEventListener("pointerdown", resumeTheme, options);
+    document.addEventListener("touchstart", resumeTheme, options);
 
     return () => {
-      events.forEach((eventName) => {
-        document.removeEventListener(eventName, resumeTheme);
-      });
+      document.removeEventListener("pointerdown", resumeTheme, options);
+      document.removeEventListener("touchstart", resumeTheme, options);
     };
-  }, [canUseAudio, enabled]);
+  }, [canUseAudio, enabled, themeReady, unlockAndPlay]);
 
   const play = useCallback(
     (sfx: CyberSfx) => {
       if (!canUseAudio || !cyberAudio.isEnabled()) {
         return;
       }
-      void cyberAudio.play(sfx);
+      cyberAudio.play(sfx);
     },
     [canUseAudio],
   );
 
-  const enableSound = useCallback(async () => {
-    if (!canUseAudio) {
-      return;
-    }
-    await cyberAudio.unlock();
-    cyberAudio.setEnabled(true);
-    setEnabled(true);
-    themeStartedRef.current = true;
-    await cyberAudio.startTheme();
-    await cyberAudio.play("boot");
-  }, [canUseAudio]);
-
   const disableSound = useCallback(() => {
     cyberAudio.setEnabled(false);
     setEnabled(false);
-    themeStartedRef.current = false;
+    setThemeReady(false);
   }, []);
 
+  const toggleSound = useCallback(() => {
+    if (!canUseAudio) {
+      return;
+    }
+
+    if (!themeReady) {
+      unlockAndPlay();
+      return;
+    }
+
+    if (enabled) {
+      disableSound();
+      return;
+    }
+
+    unlockAndPlay();
+  }, [canUseAudio, disableSound, enabled, themeReady, unlockAndPlay]);
+
   useEffect(() => {
-    if (!canUseAudio || !enabled) {
+    if (!canUseAudio || !enabled || !themeReady) {
       hoverTargetRef.current = null;
       return;
     }
 
     const onPointerDown = (event: PointerEvent) => {
       if (findInteractiveTarget(event.target)) {
-        void cyberAudio.play("click");
+        cyberAudio.play("click");
       }
     };
 
@@ -133,7 +153,7 @@ export function CyberAudioProvider({ children }: { children: ReactNode }) {
         return;
       }
       hoverTargetRef.current = interactive;
-      void cyberAudio.play("hover");
+      cyberAudio.play("hover");
     };
 
     const onPointerLeave = (event: PointerEvent) => {
@@ -153,17 +173,27 @@ export function CyberAudioProvider({ children }: { children: ReactNode }) {
       document.removeEventListener("pointerleave", onPointerLeave, true);
       hoverTargetRef.current = null;
     };
-  }, [canUseAudio, enabled]);
+  }, [canUseAudio, enabled, themeReady]);
 
   const value = useMemo(
     () => ({
       enabled,
+      themeReady,
       canUseAudio,
-      enableSound,
+      unlockAndPlay,
       disableSound,
+      toggleSound,
       play,
     }),
-    [canUseAudio, disableSound, enableSound, enabled, play],
+    [
+      canUseAudio,
+      disableSound,
+      enabled,
+      play,
+      themeReady,
+      toggleSound,
+      unlockAndPlay,
+    ],
   );
 
   return (
