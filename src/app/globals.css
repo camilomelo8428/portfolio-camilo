@@ -2195,6 +2195,11 @@ main,
     animation: none;
   }
 
+  .terminal-outdoor__lina-led,
+  .terminal-outdoor__lina-msg {
+    animation: none;
+  }
+
   .terminal-outdoor.is-glitching .terminal-outdoor__static {
     opacity: 0.35;
   }
