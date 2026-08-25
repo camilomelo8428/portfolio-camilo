@@ -1627,6 +1627,10 @@ main,
   left: max(0.75rem, env(safe-area-inset-left));
   bottom: max(1rem, env(safe-area-inset-bottom));
   z-index: 50;
+  pointer-events: auto;
+}
+
+.audio-robot__panel {
   width: min(11.5rem, calc(100vw - 6.5rem));
   padding: 0.7rem 0.75rem 0.8rem;
   border: 1px solid rgba(0, 232, 255, 0.35);
@@ -1638,7 +1642,10 @@ main,
     0 0 28px rgba(0, 232, 255, 0.12),
     0 12px 28px rgba(0, 0, 0, 0.35);
   font-family: ui-monospace, "Cascadia Code", "Consolas", monospace;
-  pointer-events: auto;
+}
+
+.audio-robot__fab {
+  display: none;
 }
 
 .audio-robot__head {
@@ -1656,7 +1663,8 @@ main,
   box-shadow: 0 0 10px rgba(255, 106, 61, 0.7);
 }
 
-.audio-robot.is-live .audio-robot__led {
+.audio-robot.is-live .audio-robot__led,
+.audio-robot.is-live .audio-robot__fab-led {
   background: #05ffa1;
   box-shadow: 0 0 12px rgba(5, 255, 161, 0.8);
   animation: outdoor-led-flicker 1.4s steps(2) infinite;
@@ -1735,20 +1743,69 @@ main,
   color: #fff;
 }
 
-.audio-robot__toggle:disabled {
+.audio-robot__toggle:disabled,
+.audio-robot__fab:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .audio-robot {
-    width: min(10.25rem, calc(100vw - 5.5rem));
-    padding: 0.55rem 0.6rem 0.65rem;
+    left: max(0.85rem, env(safe-area-inset-left));
+    bottom: max(1rem, env(safe-area-inset-bottom));
   }
 
-  .audio-robot__line {
-    min-height: 1.8rem;
-    font-size: 0.58rem;
+  .audio-robot__panel {
+    display: none;
+  }
+
+  .audio-robot__fab {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    border: 1px solid rgba(0, 232, 255, 0.35);
+    background: rgba(5, 10, 16, 0.72);
+    color: rgba(200, 251, 255, 0.85);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+    cursor: pointer;
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .audio-robot.is-live .audio-robot__fab {
+    border-color: rgba(5, 255, 161, 0.45);
+    color: #05ffa1;
+  }
+
+  .audio-robot.is-muted .audio-robot__fab {
+    border-color: rgba(127, 158, 171, 0.35);
+    color: rgba(127, 158, 171, 0.9);
+  }
+
+  .audio-robot__fab:hover:not(:disabled),
+  .audio-robot__fab:focus-visible {
+    border-color: rgba(0, 232, 255, 0.7);
+    background: rgba(0, 232, 255, 0.12);
+    color: #fff;
+    outline: none;
+  }
+
+  .audio-robot__fab-led {
+    position: absolute;
+    top: 0.35rem;
+    right: 0.35rem;
+    width: 0.35rem;
+    height: 0.35rem;
+    border-radius: 999px;
+    background: #ff6a3d;
+    box-shadow: 0 0 8px rgba(255, 106, 61, 0.7);
   }
 }
 

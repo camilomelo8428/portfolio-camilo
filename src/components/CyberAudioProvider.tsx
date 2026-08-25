@@ -33,8 +33,9 @@ const CyberAudioContext = createContext<CyberAudioContextValue | null>(null);
 export function CyberAudioProvider({ children }: { children: ReactNode }) {
   const reducedMotion = useReducedMotion();
   const canUseAudio = !reducedMotion;
-  const [enabled, setEnabled] = useState(false);
+  const [enabled, setEnabled] = useState(true);
   const hoverTargetRef = useRef<Element | null>(null);
+  const themeStartedRef = useRef(false);
 
   useEffect(() => {
     if (!canUseAudio) {
@@ -42,17 +43,25 @@ export function CyberAudioProvider({ children }: { children: ReactNode }) {
       setEnabled(false);
       return;
     }
-    setEnabled(cyberAudio.isEnabled());
+    const next = cyberAudio.isEnabled();
+    setEnabled(next);
+    if (!next) {
+      themeStartedRef.current = false;
+    }
   }, [canUseAudio]);
 
-  // Se a preferencia ja estava ligada, retoma o tema no primeiro gesto.
+  // Som inicia ativo: no primeiro toque/clique destrava e toca o tema.
   useEffect(() => {
-    if (!canUseAudio || !enabled) {
+    if (!canUseAudio || !enabled || themeStartedRef.current) {
       return;
     }
 
     const resumeTheme = () => {
-      void cyberAudio.startTheme();
+      if (themeStartedRef.current) {
+        return;
+      }
+      themeStartedRef.current = true;
+      void cyberAudio.unlock().then(() => cyberAudio.startTheme());
     };
 
     document.addEventListener("pointerdown", resumeTheme, { once: true });
@@ -78,6 +87,7 @@ export function CyberAudioProvider({ children }: { children: ReactNode }) {
     await cyberAudio.unlock();
     cyberAudio.setEnabled(true);
     setEnabled(true);
+    themeStartedRef.current = true;
     await cyberAudio.startTheme();
     await cyberAudio.play("boot");
   }, [canUseAudio]);
@@ -85,6 +95,7 @@ export function CyberAudioProvider({ children }: { children: ReactNode }) {
   const disableSound = useCallback(() => {
     cyberAudio.setEnabled(false);
     setEnabled(false);
+    themeStartedRef.current = false;
   }, []);
 
   useEffect(() => {

@@ -14,9 +14,9 @@ export type CyberSfx =
   | "memory"
   | "success";
 
-const STORAGE_KEY = "portfolio-cyber-audio-enabled";
+const STORAGE_KEY = "portfolio-cyber-audio-enabled-v2";
 const THEME_SRC = assetUrl("/audio/memory-robot.mp3");
-const THEME_VOLUME = 0.3;
+const THEME_VOLUME = 0.1;
 const SFX_MASTER_VOLUME = 0.28;
 
 /** Seletores de elementos interativos que emitem SFX. */
@@ -29,6 +29,7 @@ export const SFX_INTERACTIVE_SELECTOR = [
   ".tech-filter",
   ".project-card__trigger",
   ".audio-robot__toggle",
+  ".audio-robot__fab",
   ".terminal-outdoor__dot",
   ".lang-switch",
   "a[href^='mailto:']",
@@ -66,7 +67,7 @@ export class CyberAudioEngine {
       return;
     }
 
-    this.enabled = false;
+    this.enabled = true;
   }
 
   /**
