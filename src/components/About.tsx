@@ -14,9 +14,9 @@ export function About() {
           <h2 className="section-heading">{t.about.heading}</h2>
         </RevealOnScroll>
 
-        <div className="mt-8 grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+        <div className="mt-8 grid min-w-0 gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
           <RevealOnScroll delay={80}>
-            <div className="space-y-5 text-base leading-relaxed text-ink-muted md:text-lg">
+            <div className="min-w-0 space-y-5 text-base leading-relaxed text-ink-muted md:text-lg">
               {t.about.paragraphs.map((paragraph) => (
                 <p key={paragraph.slice(0, 32)}>{paragraph}</p>
               ))}
@@ -24,7 +24,9 @@ export function About() {
           </RevealOnScroll>
 
           <RevealOnScroll delay={140}>
-            <AboutTerminal />
+            <div className="min-w-0">
+              <AboutTerminal />
+            </div>
           </RevealOnScroll>
         </div>
       </div>

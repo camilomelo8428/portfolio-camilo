@@ -5,39 +5,51 @@ import { useCyberAudio } from "@/components/CyberAudioProvider";
 import { useLanguage } from "@/i18n/LanguageProvider";
 
 /**
- * Robo Audio Memory: companheiro HUD com memoria sonora e mute.
+ * Robo Audio Memory: companheiro HUD com memoria visual e controle de som.
  */
 export function AudioMemoryRobot() {
   const { t } = useLanguage();
-  const { muted, enabled, toggleMuted, play } = useCyberAudio();
+  const { enabled, canUseAudio, enableSound, disableSound } = useCyberAudio();
   const [lineIndex, setLineIndex] = useState(0);
   const [memCount, setMemCount] = useState(1);
   const lines = t.audioRobot.lines;
 
   const status = useMemo(() => {
-    if (!enabled) {
+    if (!canUseAudio) {
       return t.audioRobot.statusOffline;
     }
-    return muted ? t.audioRobot.statusStandby : t.audioRobot.statusOnline;
-  }, [enabled, muted, t.audioRobot]);
+    return enabled ? t.audioRobot.statusOnline : t.audioRobot.statusStandby;
+  }, [canUseAudio, enabled, t.audioRobot]);
 
   useEffect(() => {
-    if (muted || !enabled || lines.length < 2) {
+    if (lines.length < 2) {
       return;
     }
 
     const id = window.setInterval(() => {
       setLineIndex((current) => (current + 1) % lines.length);
-      setMemCount((current) => Math.min(current + 1, 8));
-      play("memory");
+      if (enabled) {
+        setMemCount((current) => Math.min(current + 1, 8));
+      }
     }, 5200);
 
     return () => window.clearInterval(id);
-  }, [enabled, lines.length, muted, play]);
+  }, [enabled, lines.length]);
+
+  const handleToggle = () => {
+    if (!canUseAudio) {
+      return;
+    }
+    if (enabled) {
+      disableSound();
+      return;
+    }
+    void enableSound();
+  };
 
   return (
     <aside
-      className={`audio-robot${muted ? " is-muted" : " is-live"}`}
+      className={`audio-robot${enabled ? " is-live" : " is-muted"}`}
       aria-label={t.audioRobot.label}
     >
       <div className="audio-robot__head">
@@ -62,11 +74,11 @@ export function AudioMemoryRobot() {
       <button
         type="button"
         className="audio-robot__toggle"
-        onClick={toggleMuted}
-        disabled={!enabled}
-        aria-pressed={!muted}
+        onClick={handleToggle}
+        disabled={!canUseAudio}
+        aria-pressed={enabled}
       >
-        {muted ? t.audioRobot.enableSound : t.audioRobot.muteSound}
+        {enabled ? t.audioRobot.muteSound : t.audioRobot.enableSound}
       </button>
     </aside>
   );

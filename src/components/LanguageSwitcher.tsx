@@ -31,11 +31,11 @@ export function LanguageSwitcher() {
             type="button"
             onClick={() => setLocale(option.id)}
             aria-pressed={locale === option.id}
-            className={
+            className={`lang-switch ${
               locale === option.id
                 ? "text-steel transition"
                 : "text-ink-muted transition hover:text-ink"
-            }
+            }`}
           >
             {option.label}
           </button>

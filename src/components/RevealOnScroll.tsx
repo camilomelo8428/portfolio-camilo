@@ -48,11 +48,20 @@ export function RevealOnScroll({
           observer.disconnect();
         }
       },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+      { threshold: 0.05, rootMargin: "0px 0px 8% 0px" },
     );
 
     observer.observe(root);
-    return () => observer.disconnect();
+
+    const fallbackId = window.setTimeout(() => {
+      root.classList.add("reveal-visible");
+      observer.disconnect();
+    }, 2200);
+
+    return () => {
+      window.clearTimeout(fallbackId);
+      observer.disconnect();
+    };
   }, []);
 
   return createElement(

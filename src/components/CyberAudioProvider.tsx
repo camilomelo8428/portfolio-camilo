@@ -6,18 +6,23 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
-import { cyberAudio, type CyberSfx } from "@/lib/cyber-audio";
+import {
+  cyberAudio,
+  findInteractiveTarget,
+  type CyberSfx,
+} from "@/lib/cyber-audio";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 type CyberAudioContextValue = {
-  muted: boolean;
   enabled: boolean;
-  toggleMuted: () => void;
+  canUseAudio: boolean;
+  enableSound: () => Promise<void>;
+  disableSound: () => void;
   play: (sfx: CyberSfx) => void;
-  unlock: () => Promise<void>;
 };
 
 const CyberAudioContext = createContext<CyberAudioContextValue | null>(null);
@@ -27,88 +32,96 @@ const CyberAudioContext = createContext<CyberAudioContextValue | null>(null);
  */
 export function CyberAudioProvider({ children }: { children: ReactNode }) {
   const reducedMotion = useReducedMotion();
-  const [muted, setMuted] = useState(true);
+  const canUseAudio = !reducedMotion;
+  const [enabled, setEnabled] = useState(false);
+  const hoverTargetRef = useRef<Element | null>(null);
 
   useEffect(() => {
-    setMuted(cyberAudio.isMuted());
-  }, []);
-
-  useEffect(() => {
-    if (reducedMotion) {
-      cyberAudio.setMuted(true);
-      setMuted(true);
+    if (!canUseAudio) {
+      cyberAudio.setEnabled(false);
+      setEnabled(false);
+      return;
     }
-  }, [reducedMotion]);
+    setEnabled(cyberAudio.isEnabled());
+  }, [canUseAudio]);
 
   const play = useCallback(
     (sfx: CyberSfx) => {
-      if (reducedMotion) {
+      if (!canUseAudio || !cyberAudio.isEnabled()) {
         return;
       }
-      cyberAudio.play(sfx);
+      void cyberAudio.play(sfx);
     },
-    [reducedMotion],
+    [canUseAudio],
   );
 
-  const unlock = useCallback(async () => {
-    await cyberAudio.unlock();
-  }, []);
-
-  const toggleMuted = useCallback(() => {
-    if (reducedMotion) {
+  const enableSound = useCallback(async () => {
+    if (!canUseAudio) {
       return;
     }
-    void unlock().then(() => {
-      const next = cyberAudio.toggleMuted();
-      setMuted(next);
-      if (!next) {
-        cyberAudio.play("boot");
-      }
-    });
-  }, [reducedMotion, unlock]);
+    await cyberAudio.unlock();
+    cyberAudio.setEnabled(true);
+    setEnabled(true);
+    await cyberAudio.play("boot");
+  }, [canUseAudio]);
+
+  const disableSound = useCallback(() => {
+    cyberAudio.setEnabled(false);
+    setEnabled(false);
+  }, []);
 
   useEffect(() => {
+    if (!canUseAudio || !enabled) {
+      hoverTargetRef.current = null;
+      return;
+    }
+
     const onPointerDown = (event: PointerEvent) => {
-      const target = event.target as HTMLElement | null;
-      if (!target) {
-        return;
-      }
-      if (
-        target.closest(
-          ".btn-outline, .btn-whatsapp, .whatsapp-float, .nav-link, .audio-robot__toggle",
-        )
-      ) {
-        play("click");
+      if (findInteractiveTarget(event.target)) {
+        void cyberAudio.play("click");
       }
     };
 
-    const onPointerOver = (event: PointerEvent) => {
-      const target = event.target as HTMLElement | null;
-      if (!target) {
+    const onPointerEnter = (event: PointerEvent) => {
+      if (event.pointerType === "touch") {
         return;
       }
-      if (target.closest(".btn-outline, .btn-whatsapp, .whatsapp-float")) {
-        play("hover");
+      const interactive = findInteractiveTarget(event.target);
+      if (!interactive || interactive === hoverTargetRef.current) {
+        return;
+      }
+      hoverTargetRef.current = interactive;
+      void cyberAudio.play("hover");
+    };
+
+    const onPointerLeave = (event: PointerEvent) => {
+      const interactive = findInteractiveTarget(event.target);
+      if (interactive && interactive === hoverTargetRef.current) {
+        hoverTargetRef.current = null;
       }
     };
 
-    document.addEventListener("pointerdown", onPointerDown);
-    document.addEventListener("pointerover", onPointerOver);
+    document.addEventListener("pointerdown", onPointerDown, true);
+    document.addEventListener("pointerenter", onPointerEnter, true);
+    document.addEventListener("pointerleave", onPointerLeave, true);
+
     return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("pointerover", onPointerOver);
+      document.removeEventListener("pointerdown", onPointerDown, true);
+      document.removeEventListener("pointerenter", onPointerEnter, true);
+      document.removeEventListener("pointerleave", onPointerLeave, true);
+      hoverTargetRef.current = null;
     };
-  }, [play]);
+  }, [canUseAudio, enabled]);
 
   const value = useMemo(
     () => ({
-      muted,
-      enabled: !reducedMotion,
-      toggleMuted,
+      enabled,
+      canUseAudio,
+      enableSound,
+      disableSound,
       play,
-      unlock,
     }),
-    [muted, play, reducedMotion, toggleMuted, unlock],
+    [canUseAudio, disableSound, enableSound, enabled, play],
   );
 
   return (
@@ -122,7 +135,7 @@ export function CyberAudioProvider({ children }: { children: ReactNode }) {
  * Hook do contexto de audio.
  *
  * Returns:
- *   Controles de mute e playback.
+ *   Controles de som e playback.
  */
 export function useCyberAudio(): CyberAudioContextValue {
   const context = useContext(CyberAudioContext);
