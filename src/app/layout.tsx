@@ -1,11 +1,11 @@
-import type { Metadata } from "next";
-import { Barlow_Condensed, IBM_Plex_Sans } from "next/font/google";
+import type { Metadata, Viewport } from "next";
+import { IBM_Plex_Sans, Orbitron } from "next/font/google";
 import { Header } from "@/components/Header";
 import { Providers } from "@/components/Providers";
 import { WhatsAppFloating } from "@/components/WhatsAppFloating";
 import "./globals.css";
 
-const display = Barlow_Condensed({
+const display = Orbitron({
   variable: "--font-display",
   subsets: ["latin"],
   weight: ["500", "600", "700"],
@@ -23,6 +23,12 @@ export const metadata: Metadata = {
     "Portfólio de Camilo Lessa de Melo — desenvolvimento full stack, infraestrutura, IoT industrial e sistemas corporativos em produção.",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className={`${display.variable} ${body.variable} h-full`}>
-      <body className="min-h-full antialiased">
+      <body className="min-h-full antialiased cyberpunk">
         <Providers>
           <Header />
           {children}
