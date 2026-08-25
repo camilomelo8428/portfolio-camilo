@@ -31,6 +31,17 @@ export type Dictionary = {
     outdoorLabel: string;
     terminal: { command: string; output: string }[];
   };
+  audioRobot: {
+    label: string;
+    title: string;
+    statusOnline: string;
+    statusStandby: string;
+    statusOffline: string;
+    memoryLabel: string;
+    enableSound: string;
+    muteSound: string;
+    lines: string[];
+  };
   tech: {
     kicker: string;
     heading: string;
@@ -181,6 +192,23 @@ const pt: Dictionary = {
         command: "contact --open",
         output: "Belém-PA · disponível para conversas técnicas",
       },
+    ],
+  },
+  audioRobot: {
+    label: "Áudio Memory Robot",
+    title: "AUDIO MEMORY ROBOT",
+    statusOnline: "ONLINE · SFX ATIVO",
+    statusStandby: "STANDBY · SOM OFF",
+    statusOffline: "OFFLINE · MOTION REDUCE",
+    memoryLabel: "MEM",
+    enableSound: "ATIVAR SOM",
+    muteSound: "MUDO",
+    lines: [
+      "> mem.load(portfolio)",
+      "> sync outdoor://crt",
+      "> remember(click, glitch, boot)",
+      "> status: night_city_ready",
+      "> tip: ative o som no robô",
     ],
   },
   tech: {
@@ -479,6 +507,23 @@ const en: Dictionary = {
         command: "contact --open",
         output: "Belém-PA · open to technical conversations",
       },
+    ],
+  },
+  audioRobot: {
+    label: "Audio Memory Robot",
+    title: "AUDIO MEMORY ROBOT",
+    statusOnline: "ONLINE · SFX LIVE",
+    statusStandby: "STANDBY · SOUND OFF",
+    statusOffline: "OFFLINE · MOTION REDUCE",
+    memoryLabel: "MEM",
+    enableSound: "ENABLE SOUND",
+    muteSound: "MUTE",
+    lines: [
+      "> mem.load(portfolio)",
+      "> sync outdoor://crt",
+      "> remember(click, glitch, boot)",
+      "> status: night_city_ready",
+      "> tip: enable sound on the robot",
     ],
   },
   tech: {

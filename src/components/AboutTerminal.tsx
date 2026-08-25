@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useCyberAudio } from "@/components/CyberAudioProvider";
 import { useLanguage } from "@/i18n/LanguageProvider";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
@@ -39,6 +40,7 @@ function wait(ms: number, signal: AbortSignal): Promise<void> {
  */
 export function AboutTerminal() {
   const { t } = useLanguage();
+  const { play } = useCyberAudio();
   const reducedMotion = useReducedMotion();
   const slides = t.about.terminal;
   const [index, setIndex] = useState(0);
@@ -66,10 +68,12 @@ export function AboutTerminal() {
       }
 
       setGlitching(true);
+      play("glitch");
       try {
         await wait(STATIC_IN_MS, signal);
         setIndex(nextIndex);
         await wait(STATIC_OUT_MS, signal);
+        play("beep");
       } finally {
         if (!signal.aborted) {
           setGlitching(false);
@@ -77,7 +81,7 @@ export function AboutTerminal() {
         busyRef.current = false;
       }
     },
-    [reducedMotion],
+    [play, reducedMotion],
   );
 
   useEffect(() => {
