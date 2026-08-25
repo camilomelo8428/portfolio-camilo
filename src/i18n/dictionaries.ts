@@ -208,7 +208,7 @@ const pt: Dictionary = {
       "> sync outdoor://crt",
       "> remember(click, glitch, boot)",
       "> status: night_city_ready",
-      "> tip: ative o som no robô",
+      "> tip: ative o som no robô (tema + sfx)",
     ],
   },
   tech: {
@@ -523,7 +523,7 @@ const en: Dictionary = {
       "> sync outdoor://crt",
       "> remember(click, glitch, boot)",
       "> status: night_city_ready",
-      "> tip: enable sound on the robot",
+      "> tip: enable sound on the robot (theme + sfx)",
     ],
   },
   tech: {

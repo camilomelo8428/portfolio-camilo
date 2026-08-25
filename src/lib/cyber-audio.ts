@@ -1,7 +1,9 @@
 /**
- * Sintese procedural de SFX cyberpunk via Web Audio API.
- * Sem arquivos de audio — leve e compativel com GitHub Pages.
+ * SFX procedurais + tema musical do Audio Memory Robot.
+ * Compativel com GitHub Pages (arquivo em /public/audio).
  */
+
+import { assetUrl } from "@/lib/assets";
 
 export type CyberSfx =
   | "boot"
@@ -13,6 +15,9 @@ export type CyberSfx =
   | "success";
 
 const STORAGE_KEY = "portfolio-cyber-audio-enabled";
+const THEME_SRC = assetUrl("/audio/memory-robot.mp3");
+const THEME_VOLUME = 0.42;
+const SFX_MASTER_VOLUME = 0.28;
 
 /** Seletores de elementos interativos que emitem SFX. */
 export const SFX_INTERACTIVE_SELECTOR = [
@@ -31,11 +36,12 @@ export const SFX_INTERACTIVE_SELECTOR = [
 ].join(", ");
 
 /**
- * Engine de audio com preferencia persistente e unlock por gesto.
+ * Engine de audio com tema em loop, mute persistente e unlock por gesto.
  */
 export class CyberAudioEngine {
   private context: AudioContext | null = null;
   private master: GainNode | null = null;
+  private theme: HTMLAudioElement | null = null;
   private enabled = false;
   private unlockPromise: Promise<void> | null = null;
   private lastHoverAt = 0;
@@ -51,7 +57,9 @@ export class CyberAudioEngine {
       return;
     }
 
-    const legacyMuted = window.localStorage.getItem("portfolio-cyber-audio-muted");
+    const legacyMuted = window.localStorage.getItem(
+      "portfolio-cyber-audio-muted",
+    );
     if (legacyMuted !== null) {
       this.enabled = legacyMuted !== "1";
       window.localStorage.setItem(STORAGE_KEY, this.enabled ? "1" : "0");
@@ -85,6 +93,10 @@ export class CyberAudioEngine {
       window.localStorage.setItem(STORAGE_KEY, active ? "1" : "0");
     }
     this.syncMasterGain();
+
+    if (!active) {
+      this.stopTheme();
+    }
   }
 
   /**
@@ -122,6 +134,35 @@ export class CyberAudioEngine {
     } finally {
       this.unlockPromise = null;
     }
+  }
+
+  /**
+   * Inicia (ou retoma) a musica tema do Memory Robot em loop.
+   */
+  async startTheme(): Promise<void> {
+    if (!this.enabled || typeof window === "undefined") {
+      return;
+    }
+
+    await this.unlock();
+    const theme = this.ensureTheme();
+    theme.volume = THEME_VOLUME;
+
+    try {
+      await theme.play();
+    } catch {
+      // Autoplay bloqueado — o gesto do botao ATIVAR SOM deve desbloquear.
+    }
+  }
+
+  /**
+   * Pausa a musica tema.
+   */
+  stopTheme(): void {
+    if (!this.theme) {
+      return;
+    }
+    this.theme.pause();
   }
 
   /**
@@ -183,9 +224,22 @@ export class CyberAudioEngine {
     }
   }
 
+  private ensureTheme(): HTMLAudioElement {
+    if (this.theme) {
+      return this.theme;
+    }
+
+    const audio = new Audio(THEME_SRC);
+    audio.loop = true;
+    audio.preload = "auto";
+    audio.volume = THEME_VOLUME;
+    this.theme = audio;
+    return audio;
+  }
+
   private syncMasterGain(): void {
     if (this.master) {
-      this.master.gain.value = this.enabled ? 0.42 : 0;
+      this.master.gain.value = this.enabled ? SFX_MASTER_VOLUME : 0;
     }
   }
 

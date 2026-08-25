@@ -45,6 +45,22 @@ export function CyberAudioProvider({ children }: { children: ReactNode }) {
     setEnabled(cyberAudio.isEnabled());
   }, [canUseAudio]);
 
+  // Se a preferencia ja estava ligada, retoma o tema no primeiro gesto.
+  useEffect(() => {
+    if (!canUseAudio || !enabled) {
+      return;
+    }
+
+    const resumeTheme = () => {
+      void cyberAudio.startTheme();
+    };
+
+    document.addEventListener("pointerdown", resumeTheme, { once: true });
+    return () => {
+      document.removeEventListener("pointerdown", resumeTheme);
+    };
+  }, [canUseAudio, enabled]);
+
   const play = useCallback(
     (sfx: CyberSfx) => {
       if (!canUseAudio || !cyberAudio.isEnabled()) {
@@ -62,6 +78,7 @@ export function CyberAudioProvider({ children }: { children: ReactNode }) {
     await cyberAudio.unlock();
     cyberAudio.setEnabled(true);
     setEnabled(true);
+    await cyberAudio.startTheme();
     await cyberAudio.play("boot");
   }, [canUseAudio]);
 
