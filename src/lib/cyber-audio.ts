@@ -1,9 +1,9 @@
 /**
  * SFX procedurais + tema musical do Audio Memory Robot.
- * Usa elemento <audio> no DOM para compatibilidade iOS/mobile.
  *
- * SFX de hover/click ficam SEMPRE ativos apos o primeiro gesto.
- * O botao FAB controla apenas a musica-tema.
+ * - SFX (hover/click) ficam sempre ativos apos o primeiro gesto.
+ * - O FAB controla apenas a musica-tema.
+ * - unlock/resume rodam de forma SINCRONA no gesto (exigencia dos browsers).
  */
 
 import { assetUrl } from "@/lib/assets";
@@ -17,11 +17,10 @@ export type CyberSfx =
   | "memory"
   | "success";
 
-/** Preferencia so da musica-tema (SFX nao usa este flag). */
 const THEME_STORAGE_KEY = "portfolio-cyber-theme-enabled-v5";
 const LEGACY_STORAGE_KEY = "portfolio-cyber-audio-enabled-v4";
 const THEME_VOLUME = 0.1;
-const SFX_MASTER_VOLUME = 0.28;
+const SFX_MASTER_VOLUME = 0.42;
 
 /** Seletores de elementos interativos que emitem SFX. */
 export const SFX_INTERACTIVE_SELECTOR = [
@@ -36,6 +35,8 @@ export const SFX_INTERACTIVE_SELECTOR = [
   ".lang-switch",
   "a[href^='mailto:']",
   "a[href^='tel:']",
+  "a[href^='#']",
+  "button:not(.audio-robot__fab)",
 ].join(", ");
 
 export const THEME_AUDIO_SRC = assetUrl("/audio/memory-robot.mp3");
@@ -59,9 +60,9 @@ export class CyberAudioEngine {
   private theme: HTMLAudioElement | null = null;
   private themeEnabled = true;
   private primed = false;
-  private unlockPromise: Promise<void> | null = null;
   private lastHoverAt = 0;
   private lastFabTapAt = 0;
+  private lastClickAt = 0;
 
   constructor() {
     if (typeof window === "undefined") {
@@ -74,7 +75,6 @@ export class CyberAudioEngine {
       return;
     }
 
-    // Migra preferencia antiga (ligava/desligava tudo).
     const legacy = window.localStorage.getItem(LEGACY_STORAGE_KEY);
     if (legacy !== null) {
       this.themeEnabled = legacy === "1";
@@ -112,6 +112,13 @@ export class CyberAudioEngine {
    */
   isThemePrimed(): boolean {
     return this.primed;
+  }
+
+  /**
+   * Indica se o AudioContext esta pronto para SFX.
+   */
+  isSfxReady(): boolean {
+    return Boolean(this.context && this.context.state === "running");
   }
 
   /**
@@ -180,40 +187,57 @@ export class CyberAudioEngine {
   }
 
   /**
-   * Desbloqueia AudioContext apos gesto do usuario.
+   * Cria/resume o AudioContext de forma SINCRONA no gesto do usuario.
+   * Critico para Chrome/Safari (autoplay policy).
+   *
+   * Returns:
+   *   True se o contexto esta running (ou resume foi disparado).
+   */
+  unlockFromGesture(): boolean {
+    if (typeof window === "undefined") {
+      return false;
+    }
+
+    if (!this.context) {
+      const AudioCtx =
+        window.AudioContext ||
+        (
+          window as unknown as {
+            webkitAudioContext: typeof AudioContext;
+          }
+        ).webkitAudioContext;
+      this.context = new AudioCtx();
+      this.master = this.context.createGain();
+      this.master.connect(this.context.destination);
+      this.master.gain.value = SFX_MASTER_VOLUME;
+    }
+
+    if (this.context.state === "suspended") {
+      // Nao usar await aqui — precisa permanecer no tick do gesto.
+      void this.context.resume().then(() => {
+        notifyAudioChange();
+      });
+    }
+
+    if (this.master) {
+      this.master.gain.value = SFX_MASTER_VOLUME;
+    }
+
+    return true;
+  }
+
+  /**
+   * Compat: alias usado por codigo antigo.
    */
   unlock(): Promise<void> {
-    if (typeof window === "undefined") {
+    this.unlockFromGesture();
+    if (!this.context) {
       return Promise.resolve();
     }
-
-    if (this.unlockPromise) {
-      return this.unlockPromise;
+    if (this.context.state === "running") {
+      return Promise.resolve();
     }
-
-    this.unlockPromise = (async () => {
-      if (!this.context) {
-        const AudioCtx =
-          window.AudioContext ||
-          (
-            window as unknown as {
-              webkitAudioContext: typeof AudioContext;
-            }
-          ).webkitAudioContext;
-        this.context = new AudioCtx();
-        this.master = this.context.createGain();
-        this.master.connect(this.context.destination);
-        this.master.gain.value = SFX_MASTER_VOLUME;
-      }
-
-      if (this.context.state === "suspended") {
-        await this.context.resume();
-      }
-    })();
-
-    return this.unlockPromise.finally(() => {
-      this.unlockPromise = null;
-    });
+    return this.context.resume().then(() => undefined);
   }
 
   /**
@@ -223,6 +247,8 @@ export class CyberAudioEngine {
    *   True se o tema ficou audivel.
    */
   unmuteFromGesture(): boolean {
+    this.unlockFromGesture();
+
     if (!this.themeEnabled || !this.theme || typeof window === "undefined") {
       return false;
     }
@@ -240,7 +266,6 @@ export class CyberAudioEngine {
     }
 
     this.primed = true;
-    void this.unlock();
     notifyAudioChange();
     return true;
   }
@@ -258,6 +283,8 @@ export class CyberAudioEngine {
     }
     this.lastFabTapAt = now;
 
+    this.unlockFromGesture();
+
     if (this.isThemeAudible()) {
       this.setEnabled(false);
       return false;
@@ -265,7 +292,7 @@ export class CyberAudioEngine {
 
     this.setEnabled(true);
     this.unmuteFromGesture();
-    this.play("boot");
+    this.play("boot", true);
     return true;
   }
 
@@ -273,7 +300,7 @@ export class CyberAudioEngine {
    * Primeiro gesto na pagina — libera SFX e, se preferido, o tema.
    */
   handlePageGesture(): void {
-    void this.unlock();
+    this.unlockFromGesture();
     if (!this.themeEnabled || this.isThemeAudible()) {
       return;
     }
@@ -305,55 +332,76 @@ export class CyberAudioEngine {
       return;
     }
 
-    void this.unlock().then(() => {
+    // Garante contexto; se ainda suspended, tenta resume e toca depois.
+    this.unlockFromGesture();
+
+    const emit = (): void => {
       if (!this.context || !this.master) {
         return;
       }
-
-      if (this.master.gain.value !== SFX_MASTER_VOLUME) {
-        this.master.gain.value = SFX_MASTER_VOLUME;
+      if (this.context.state !== "running") {
+        return;
       }
+
+      this.master.gain.value = SFX_MASTER_VOLUME;
 
       if (sfx === "hover") {
         const now = performance.now();
-        if (now - this.lastHoverAt < 120) {
+        if (now - this.lastHoverAt < 90) {
           return;
         }
         this.lastHoverAt = now;
       }
 
+      if (sfx === "click") {
+        const now = performance.now();
+        if (now - this.lastClickAt < 80) {
+          return;
+        }
+        this.lastClickAt = now;
+      }
+
       switch (sfx) {
         case "click":
-          this.tone(920, 0.045, "square", 0.14);
-          this.tone(520, 0.06, "square", 0.08, 0.03);
+          this.tone(980, 0.05, "square", 0.22);
+          this.tone(560, 0.07, "square", 0.12, 0.03);
           break;
         case "hover":
-          this.tone(1240, 0.028, "triangle", 0.05);
+          this.tone(1320, 0.035, "triangle", 0.12);
           break;
         case "beep":
-          this.tone(680, 0.07, "sine", 0.11);
+          this.tone(680, 0.07, "sine", 0.14);
           break;
         case "memory":
-          this.tone(480, 0.05, "triangle", 0.07);
-          this.tone(720, 0.06, "triangle", 0.06, 0.06);
+          this.tone(480, 0.05, "triangle", 0.1);
+          this.tone(720, 0.06, "triangle", 0.09, 0.06);
           break;
         case "success":
-          this.tone(523, 0.07, "sine", 0.1);
-          this.tone(659, 0.08, "sine", 0.1, 0.06);
-          this.tone(784, 0.1, "sine", 0.11, 0.12);
+          this.tone(523, 0.07, "sine", 0.12);
+          this.tone(659, 0.08, "sine", 0.12, 0.06);
+          this.tone(784, 0.1, "sine", 0.13, 0.12);
           break;
         case "boot":
-          this.tone(180, 0.07, "sawtooth", 0.06);
-          this.tone(280, 0.07, "sawtooth", 0.07, 0.06);
-          this.tone(420, 0.09, "sawtooth", 0.08, 0.12);
-          this.tone(620, 0.1, "square", 0.07, 0.2);
+          this.tone(180, 0.07, "sawtooth", 0.1);
+          this.tone(280, 0.07, "sawtooth", 0.11, 0.06);
+          this.tone(420, 0.09, "sawtooth", 0.12, 0.12);
+          this.tone(620, 0.1, "square", 0.1, 0.2);
           break;
         case "glitch":
-          this.noiseBurst(0.16, 0.12);
+          this.noiseBurst(0.16, 0.16);
           break;
         default:
           break;
       }
+    };
+
+    if (this.context?.state === "running") {
+      emit();
+      return;
+    }
+
+    void this.context?.resume().then(() => {
+      emit();
     });
   }
 
