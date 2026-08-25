@@ -6,18 +6,17 @@ import { useLanguage } from "@/i18n/LanguageProvider";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 const HOLD_MS = 4000;
+const LINA_HOLD_MS = 12000;
 const STATIC_IN_MS = 280;
 const STATIC_OUT_MS = 180;
+const LINA_MSG_GAP_MS = 1650;
+
+type TerminalSlide =
+  | { mode?: "cmd"; command: string; output: string }
+  | { mode: "lina"; command: string; messages: string[] };
 
 /**
  * Aguarda um intervalo cancelavel.
- *
- * Args:
- *   ms: Tempo em milissegundos.
- *   signal: AbortSignal para cancelar a espera.
- *
- * Returns:
- *   Promise resolvida ao fim do tempo ou rejeitada se abortado.
  */
 function wait(ms: number, signal: AbortSignal): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -36,13 +35,82 @@ function wait(ms: number, signal: AbortSignal): Promise<void> {
 }
 
 /**
- * Outdoor CRT com troca automatica de canais e estatica de TV.
+ * Chat simulado da Lina no outdoor CRT.
+ */
+function LinaChatSlide({
+  messages,
+  reducedMotion,
+  play,
+}: {
+  messages: string[];
+  reducedMotion: boolean;
+  play: (sfx: "memory" | "beep") => void;
+}) {
+  const [visibleCount, setVisibleCount] = useState(
+    reducedMotion ? messages.length : 0,
+  );
+
+  useEffect(() => {
+    if (reducedMotion) {
+      setVisibleCount(messages.length);
+      return;
+    }
+
+    setVisibleCount(0);
+    let count = 0;
+    let timer = 0;
+
+    const revealNext = () => {
+      count += 1;
+      setVisibleCount(count);
+      if (count === 1) {
+        play("memory");
+      } else {
+        play("beep");
+      }
+      if (count < messages.length) {
+        timer = window.setTimeout(revealNext, LINA_MSG_GAP_MS);
+      }
+    };
+
+    timer = window.setTimeout(revealNext, 420);
+    return () => window.clearTimeout(timer);
+  }, [messages, play, reducedMotion]);
+
+  return (
+    <div className="terminal-outdoor__chat">
+      <p className="terminal-outdoor__lina-head">
+        <span className="terminal-outdoor__lina-led" aria-hidden />
+        LINA · IA LOCAL · online
+      </p>
+      <ul className="terminal-outdoor__lina-list">
+        {messages.slice(0, visibleCount).map((text, index) => (
+          <li
+            key={`${index}-${text.slice(0, 12)}`}
+            className="terminal-outdoor__lina-msg"
+          >
+            <span className="terminal-outdoor__lina-tag">lina</span>
+            <span className="terminal-outdoor__lina-text">{text}</span>
+          </li>
+        ))}
+      </ul>
+      {visibleCount < messages.length ? (
+        <span className="terminal-cursor terminal-cursor--idle" aria-hidden>
+          _
+        </span>
+      ) : null}
+    </div>
+  );
+}
+
+/**
+ * Outdoor CRT com canais automaticos — inclui chat da Lina.
  */
 export function AboutTerminal() {
   const { t } = useLanguage();
   const { play } = useCyberAudio();
   const reducedMotion = useReducedMotion();
-  const slides = t.about.terminal;
+  const slides = t.about.terminal as TerminalSlide[];
   const [index, setIndex] = useState(0);
   const [glitching, setGlitching] = useState(false);
   const busyRef = useRef(false);
@@ -96,7 +164,10 @@ export function AboutTerminal() {
     const loop = async () => {
       try {
         while (!controller.signal.aborted) {
-          await wait(HOLD_MS, controller.signal);
+          const current = slides[indexRef.current];
+          const hold =
+            current?.mode === "lina" ? LINA_HOLD_MS : HOLD_MS;
+          await wait(hold, controller.signal);
 
           while (busyRef.current && !controller.signal.aborted) {
             await wait(80, controller.signal);
@@ -116,7 +187,7 @@ export function AboutTerminal() {
 
     void loop();
     return () => controller.abort();
-  }, [runStaticSwap, slides.length, t.about.terminal]);
+  }, [runStaticSwap, slides, t.about.terminal]);
 
   useEffect(() => {
     setIndex(0);
@@ -126,6 +197,7 @@ export function AboutTerminal() {
 
   const slide = slides[index] ?? slides[0];
   const channel = String(index + 1).padStart(2, "0");
+  const isLina = slide?.mode === "lina";
 
   if (!slide) {
     return null;
@@ -133,7 +205,9 @@ export function AboutTerminal() {
 
   return (
     <div
-      className={`terminal-outdoor${glitching ? " is-glitching" : ""}`}
+      className={`terminal-outdoor${glitching ? " is-glitching" : ""}${
+        isLina ? " is-lina" : ""
+      }`}
       role="region"
       aria-roledescription="carousel"
       aria-label={t.about.outdoorLabel}
@@ -141,7 +215,9 @@ export function AboutTerminal() {
     >
       <div className="terminal-outdoor__bezel" aria-hidden>
         <span className="terminal-outdoor__led" />
-        <span className="terminal-outdoor__brand">OUTDOOR // CRT</span>
+        <span className="terminal-outdoor__brand">
+          {isLina ? "OUTDOOR // LINA" : "OUTDOOR // CRT"}
+        </span>
         <span className="terminal-outdoor__ch">CH-{channel}</span>
       </div>
 
@@ -154,15 +230,28 @@ export function AboutTerminal() {
           key={`${slide.command}-${index}`}
           className={`terminal-outdoor__slide${glitching ? " is-hidden" : ""}`}
         >
-          <p className="terminal-command">
-            <span className="terminal-prompt">{">"}</span> {slide.command}
-          </p>
-          <p className="terminal-output terminal-outdoor__output">
-            {slide.output}
-          </p>
-          <span className="terminal-cursor terminal-cursor--idle" aria-hidden>
-            _
-          </span>
+          {slide.mode === "lina" ? (
+            <LinaChatSlide
+              messages={slide.messages}
+              reducedMotion={reducedMotion}
+              play={(sfx) => play(sfx)}
+            />
+          ) : (
+            <>
+              <p className="terminal-command">
+                <span className="terminal-prompt">{">"}</span> {slide.command}
+              </p>
+              <p className="terminal-output terminal-outdoor__output">
+                {"output" in slide ? slide.output : ""}
+              </p>
+              <span
+                className="terminal-cursor terminal-cursor--idle"
+                aria-hidden
+              >
+                _
+              </span>
+            </>
+          )}
         </div>
       </div>
 

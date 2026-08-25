@@ -29,7 +29,10 @@ export type Dictionary = {
     heading: string;
     paragraphs: string[];
     outdoorLabel: string;
-    terminal: { command: string; output: string }[];
+    terminal: Array<
+      | { mode?: "cmd"; command: string; output: string }
+      | { mode: "lina"; command: string; messages: string[] }
+    >;
   };
   audioRobot: {
     label: string;
@@ -163,6 +166,17 @@ const pt: Dictionary = {
     outdoorLabel: "Painel outdoor de informações",
     terminal: [
       { command: "whoami", output: "Camilo Lessa de Melo" },
+      {
+        mode: "lina",
+        command: "lina --chat",
+        messages: [
+          "Oi! Eu sou a Lina — a IA local do Camilo.",
+          "Ele é de Belém-PA: Gestor de TI e Full Stack na AMASA.",
+          "Curte o ciclo completo: API, interface, infra e IoT.",
+          "Stack: Python, FastAPI, React, ESP32 e SQL.",
+          "Entrega sistema real — sensores, chat e automação.",
+        ],
+      },
       { command: "pwd", output: "/belem-pa/amasa/ti" },
       {
         command: "role --current",
@@ -183,10 +197,6 @@ const pt: Dictionary = {
       {
         command: "focus --now",
         output: "IoT industrial · sistemas corporativos · automação",
-      },
-      {
-        command: "ping reality",
-        output: "sistemas no ar — uptime em progresso",
       },
       {
         command: "contact --open",
@@ -478,6 +488,17 @@ const en: Dictionary = {
     outdoorLabel: "Outdoor information panel",
     terminal: [
       { command: "whoami", output: "Camilo Lessa de Melo" },
+      {
+        mode: "lina",
+        command: "lina --chat",
+        messages: [
+          "Hi! I'm Lina — Camilo's local AI.",
+          "He's from Belém-PA: IT Manager & Full Stack at AMASA.",
+          "Loves the full cycle: API, UI, infra and IoT.",
+          "Stack: Python, FastAPI, React, ESP32 and SQL.",
+          "Ships real systems — sensors, chat and automation.",
+        ],
+      },
       { command: "pwd", output: "/belem-pa/amasa/it" },
       {
         command: "role --current",
@@ -498,10 +519,6 @@ const en: Dictionary = {
       {
         command: "focus --now",
         output: "industrial IoT · corporate systems · automation",
-      },
-      {
-        command: "ping reality",
-        output: "systems online — uptime in progress",
       },
       {
         command: "contact --open",
