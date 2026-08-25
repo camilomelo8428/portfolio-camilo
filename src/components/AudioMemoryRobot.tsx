@@ -1,7 +1,9 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { useCyberAudio } from "@/components/CyberAudioProvider";
 import { useLanguage } from "@/i18n/LanguageProvider";
+import { THEME_AUDIO_SRC, cyberAudio } from "@/lib/cyber-audio";
 
 /**
  * Icone de som ligado (alto-falante).
@@ -36,7 +38,9 @@ function IconSoundOff() {
  */
 export function AudioMemoryRobot() {
   const { t } = useLanguage();
-  const { enabled, themeReady, canUseAudio, toggleSound } = useCyberAudio();
+  const { enabled, themeReady, syncFromEngine } = useCyberAudio();
+  const audioRef = useRef<HTMLAudioElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const toggleLabel = !themeReady
     ? t.audioRobot.enableSound
@@ -44,32 +48,82 @@ export function AudioMemoryRobot() {
       ? t.audioRobot.muteSound
       : t.audioRobot.enableSound;
 
-  const handlePointerDown = (
-    event: React.PointerEvent<HTMLButtonElement>,
-  ) => {
-    event.stopPropagation();
-    if (!canUseAudio) {
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) {
       return;
     }
-    toggleSound();
-  };
+    cyberAudio.bindThemeElement(audio);
+    syncFromEngine();
+  }, [syncFromEngine]);
+
+  // Eventos nativos — touchstart no mobile; click no desktop.
+  useEffect(() => {
+    const button = buttonRef.current;
+    if (!button) {
+      return;
+    }
+
+    let touchHandled = false;
+
+    const onFabGesture = (event: Event) => {
+      event.stopPropagation();
+      cyberAudio.handleFabGesture();
+      syncFromEngine();
+    };
+
+    const onTouchStart = (event: TouchEvent) => {
+      touchHandled = true;
+      window.setTimeout(() => {
+        touchHandled = false;
+      }, 450);
+      event.stopPropagation();
+      cyberAudio.handleFabGesture();
+      syncFromEngine();
+    };
+
+    const onClick = (event: MouseEvent) => {
+      if (touchHandled) {
+        event.preventDefault();
+        return;
+      }
+      onFabGesture(event);
+    };
+
+    button.addEventListener("touchstart", onTouchStart, { passive: true });
+    button.addEventListener("click", onClick);
+
+    return () => {
+      button.removeEventListener("touchstart", onTouchStart);
+      button.removeEventListener("click", onClick);
+    };
+  }, [syncFromEngine]);
 
   return (
     <aside
       className={`audio-robot${enabled ? " is-live" : " is-muted"}${themeReady ? " is-playing" : " is-pending"}`}
       aria-label={t.audioRobot.label}
     >
+      <audio
+        ref={audioRef}
+        className="audio-robot__track"
+        src={THEME_AUDIO_SRC}
+        loop
+        preload="auto"
+        muted
+        playsInline
+      />
+
       <button
+        ref={buttonRef}
         type="button"
         className="audio-robot__fab"
-        onPointerDown={handlePointerDown}
-        disabled={!canUseAudio}
-        aria-pressed={enabled && themeReady}
+        aria-pressed={themeReady}
         aria-label={toggleLabel}
         title={toggleLabel}
       >
         <span className="audio-robot__fab-led" aria-hidden />
-        {enabled ? <IconSoundOn /> : <IconSoundOff />}
+        {themeReady ? <IconSoundOn /> : <IconSoundOff />}
       </button>
     </aside>
   );

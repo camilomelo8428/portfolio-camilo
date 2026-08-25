@@ -1,6 +1,6 @@
 /**
  * SFX procedurais + tema musical do Audio Memory Robot.
- * Compativel com GitHub Pages (arquivo em /public/audio).
+ * Usa elemento <audio> no DOM para compatibilidade iOS/mobile.
  */
 
 import { assetUrl } from "@/lib/assets";
@@ -14,8 +14,7 @@ export type CyberSfx =
   | "memory"
   | "success";
 
-const STORAGE_KEY = "portfolio-cyber-audio-enabled-v3";
-const THEME_SRC = assetUrl("/audio/memory-robot.mp3");
+const STORAGE_KEY = "portfolio-cyber-audio-enabled-v4";
 const THEME_VOLUME = 0.1;
 const SFX_MASTER_VOLUME = 0.28;
 
@@ -34,6 +33,18 @@ export const SFX_INTERACTIVE_SELECTOR = [
   "a[href^='tel:']",
 ].join(", ");
 
+export const THEME_AUDIO_SRC = assetUrl("/audio/memory-robot.mp3");
+
+/**
+ * Notifica React sobre mudanca de estado do audio.
+ */
+function notifyAudioChange(): void {
+  if (typeof window === "undefined") {
+    return;
+  }
+  window.dispatchEvent(new CustomEvent("cyber-audio-changed"));
+}
+
 /**
  * Engine de audio com tema em loop, mute persistente e unlock por gesto.
  */
@@ -41,9 +52,11 @@ export class CyberAudioEngine {
   private context: AudioContext | null = null;
   private master: GainNode | null = null;
   private theme: HTMLAudioElement | null = null;
-  private enabled = false;
+  private enabled = true;
+  private primed = false;
   private unlockPromise: Promise<void> | null = null;
   private lastHoverAt = 0;
+  private lastFabTapAt = 0;
 
   constructor() {
     if (typeof window === "undefined") {
@@ -56,35 +69,52 @@ export class CyberAudioEngine {
       return;
     }
 
-    const legacyMuted = window.localStorage.getItem(
-      "portfolio-cyber-audio-muted",
-    );
-    if (legacyMuted !== null) {
-      this.enabled = legacyMuted !== "1";
-      window.localStorage.setItem(STORAGE_KEY, this.enabled ? "1" : "0");
-      return;
-    }
-
     this.enabled = true;
   }
 
   /**
-   * Indica se o audio esta habilitado.
+   * Indica se o audio esta habilitado pelo usuario.
    */
   isEnabled(): boolean {
     return this.enabled;
   }
 
-  /** @deprecated Use isEnabled — mantido por compatibilidade interna. */
-  isMuted(): boolean {
-    return !this.enabled;
+  /**
+   * Indica se o tema esta audivel agora.
+   */
+  isThemeAudible(): boolean {
+    return Boolean(
+      this.theme && !this.theme.paused && !this.theme.muted && this.enabled,
+    );
   }
 
   /**
-   * Indica se o tema esta tocando agora.
+   * Indica se o tema foi precarregado (mesmo mudo).
    */
-  isThemePlaying(): boolean {
-    return Boolean(this.theme && !this.theme.paused && !this.theme.ended);
+  isThemePrimed(): boolean {
+    return this.primed;
+  }
+
+  /**
+   * Vincula o elemento <audio> renderizado no DOM.
+   *
+   * Args:
+   *   element: Tag audio do React.
+   */
+  bindThemeElement(element: HTMLAudioElement): void {
+    this.theme = element;
+    element.loop = true;
+    element.preload = "auto";
+    element.volume = THEME_VOLUME;
+    element.setAttribute("playsinline", "true");
+    element.setAttribute("webkit-playsinline", "true");
+
+    if (this.enabled) {
+      this.primeTheme();
+    } else {
+      element.pause();
+      element.muted = true;
+    }
   }
 
   /**
@@ -101,19 +131,34 @@ export class CyberAudioEngine {
     this.syncMasterGain();
 
     if (!active) {
-      this.stopTheme();
+      this.muteTheme();
     }
+
+    notifyAudioChange();
   }
 
   /**
-   * Precarrega o MP3 do tema.
+   * Tenta autoplay mudo ao carregar (permitido pelos navegadores).
    */
-  preloadTheme(): void {
-    if (typeof window === "undefined") {
+  primeTheme(): void {
+    if (!this.enabled || !this.theme || typeof window === "undefined") {
       return;
     }
-    const theme = this.ensureTheme();
-    theme.load();
+
+    this.theme.muted = true;
+    this.theme.volume = THEME_VOLUME;
+
+    const attempt = this.theme.play();
+    if (attempt !== undefined) {
+      void attempt
+        .then(() => {
+          this.primed = true;
+          notifyAudioChange();
+        })
+        .catch(() => {
+          this.primed = false;
+        });
+    }
   }
 
   /**
@@ -151,55 +196,79 @@ export class CyberAudioEngine {
   }
 
   /**
-   * Inicia o tema dentro do gesto (sync) — necessario no iOS/mobile.
+   * Ativa o som do tema dentro de um gesto (sync) — iOS/mobile.
    *
    * Returns:
-   *   True se tentou tocar o tema.
+   *   True se o tema ficou audivel.
    */
-  playThemeFromGesture(): boolean {
-    if (!this.enabled || typeof window === "undefined") {
+  unmuteFromGesture(): boolean {
+    if (!this.enabled || !this.theme || typeof window === "undefined") {
       return false;
     }
 
-    const theme = this.ensureTheme();
-    theme.volume = THEME_VOLUME;
+    this.theme.muted = false;
+    this.theme.volume = THEME_VOLUME;
 
-    if (!theme.paused) {
-      void this.unlock();
-      return true;
+    if (this.theme.paused) {
+      const attempt = this.theme.play();
+      if (attempt !== undefined) {
+        void attempt.catch(() => {
+          // Ignora — aguarda proximo gesto.
+        });
+      }
     }
 
-    const playAttempt = theme.play();
-    if (playAttempt !== undefined) {
-      void playAttempt.catch(() => {
-        // Autoplay bloqueado — aguarda outro gesto.
-      });
-    }
-
+    this.primed = true;
     void this.unlock();
+    notifyAudioChange();
     return true;
   }
 
   /**
-   * Inicia (ou retoma) a musica tema do Memory Robot em loop.
+   * Handler do botao FAB — chamado por eventos nativos (touch/click).
+   *
+   * Returns:
+   *   Novo estado audivel do tema.
    */
-  async startTheme(): Promise<void> {
-    if (!this.enabled || typeof window === "undefined") {
-      return;
+  handleFabGesture(): boolean {
+    const now = performance.now();
+    if (now - this.lastFabTapAt < 280) {
+      return this.isThemeAudible();
+    }
+    this.lastFabTapAt = now;
+
+    if (this.isThemeAudible()) {
+      this.setEnabled(false);
+      return false;
     }
 
-    this.playThemeFromGesture();
-    await this.unlock();
+    this.setEnabled(true);
+    this.unmuteFromGesture();
+    this.play("boot");
+    return true;
   }
 
   /**
-   * Pausa a musica tema.
+   * Primeiro gesto na pagina — ativa som se preferencia estiver ligada.
    */
-  stopTheme(): void {
+  handlePageGesture(): void {
+    if (!this.enabled || this.isThemeAudible()) {
+      return;
+    }
+    this.unmuteFromGesture();
+  }
+
+  /**
+   * Pausa e silencia o tema.
+   */
+  muteTheme(): void {
     if (!this.theme) {
       return;
     }
     this.theme.pause();
+    this.theme.muted = true;
+    this.primed = false;
+    notifyAudioChange();
   }
 
   /**
@@ -207,9 +276,10 @@ export class CyberAudioEngine {
    *
    * Args:
    *   sfx: Identificador do som.
+   *   allowReducedMotion: Se false, nao toca (acessibilidade).
    */
-  play(sfx: CyberSfx): void {
-    if (!this.enabled || typeof window === "undefined") {
+  play(sfx: CyberSfx, allowReducedMotion = true): void {
+    if (!allowReducedMotion || !this.enabled || typeof window === "undefined") {
       return;
     }
 
@@ -259,20 +329,6 @@ export class CyberAudioEngine {
           break;
       }
     });
-  }
-
-  private ensureTheme(): HTMLAudioElement {
-    if (this.theme) {
-      return this.theme;
-    }
-
-    const audio = new Audio(THEME_SRC);
-    audio.loop = true;
-    audio.preload = "auto";
-    audio.volume = THEME_VOLUME;
-    audio.setAttribute("playsinline", "true");
-    this.theme = audio;
-    return audio;
   }
 
   private syncMasterGain(): void {
@@ -342,12 +398,6 @@ export const cyberAudio = new CyberAudioEngine();
 
 /**
  * Retorna o elemento interativo mais proximo, se existir.
- *
- * Args:
- *   target: Elemento do evento.
- *
- * Returns:
- *   Elemento interativo ou null.
  */
 export function findInteractiveTarget(
   target: EventTarget | null,
@@ -360,12 +410,6 @@ export function findInteractiveTarget(
 
 /**
  * Verifica se o alvo e o botao de audio.
- *
- * Args:
- *   target: Elemento do evento.
- *
- * Returns:
- *   True se for o FAB de audio.
  */
 export function isAudioFabTarget(target: EventTarget | null): boolean {
   if (!(target instanceof Element)) {
