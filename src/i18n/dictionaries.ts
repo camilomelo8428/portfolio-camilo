@@ -29,7 +29,6 @@ export type Dictionary = {
     heading: string;
     paragraphs: string[];
     outdoorLabel: string;
-    outdoorHint: string;
     terminal: { command: string; output: string }[];
   };
   tech: {
@@ -151,7 +150,6 @@ const pt: Dictionary = {
       "Entre sensores em embarcações, plataformas corporativas e automação no chão de fábrica, vou construindo sistemas que resolvem problemas reais. Ainda tem muito para aprender, e é isso que mais me move na área de tecnologia.",
     ],
     outdoorLabel: "Painel outdoor de informações",
-    outdoorHint: "Toque para trocar o canal",
     terminal: [
       { command: "whoami", output: "Camilo Lessa de Melo" },
       { command: "pwd", output: "/belem-pa/amasa/ti" },
@@ -450,7 +448,6 @@ const en: Dictionary = {
       "Between vessel sensors, corporate platforms, and shop-floor automation, I build systems that solve real problems. There's still a lot to learn, and that's what keeps me moving in tech.",
     ],
     outdoorLabel: "Outdoor information panel",
-    outdoorHint: "Tap to change channel",
     terminal: [
       { command: "whoami", output: "Camilo Lessa de Melo" },
       { command: "pwd", output: "/belem-pa/amasa/it" },

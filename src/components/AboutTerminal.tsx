@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/i18n/LanguageProvider";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-const HOLD_MS = 3400;
+const HOLD_MS = 4000;
 const STATIC_IN_MS = 280;
 const STATIC_OUT_MS = 180;
 
@@ -35,7 +35,7 @@ function wait(ms: number, signal: AbortSignal): Promise<void> {
 }
 
 /**
- * Outdoor estilo CRT: cicla informacoes com burst de TV fora de sintonia.
+ * Outdoor CRT com troca automatica de canais e estatica de TV.
  */
 export function AboutTerminal() {
   const { t } = useLanguage();
@@ -43,7 +43,6 @@ export function AboutTerminal() {
   const slides = t.about.terminal;
   const [index, setIndex] = useState(0);
   const [glitching, setGlitching] = useState(false);
-  const [paused, setPaused] = useState(false);
   const busyRef = useRef(false);
   const indexRef = useRef(0);
   const abortRef = useRef<AbortController | null>(null);
@@ -54,12 +53,18 @@ export function AboutTerminal() {
 
   const runStaticSwap = useCallback(
     async (nextIndex: number, signal: AbortSignal) => {
-      if (reducedMotion) {
-        setIndex(nextIndex);
+      if (nextIndex === indexRef.current) {
         return;
       }
 
       busyRef.current = true;
+
+      if (reducedMotion) {
+        setIndex(nextIndex);
+        busyRef.current = false;
+        return;
+      }
+
       setGlitching(true);
       try {
         await wait(STATIC_IN_MS, signal);
@@ -75,30 +80,12 @@ export function AboutTerminal() {
     [reducedMotion],
   );
 
-  const goTo = useCallback(
-    async (nextIndex: number) => {
-      if (busyRef.current || slides.length < 2 || nextIndex === indexRef.current) {
-        return;
-      }
-      abortRef.current?.abort();
-      const controller = new AbortController();
-      abortRef.current = controller;
-      try {
-        await runStaticSwap(nextIndex, controller.signal);
-      } catch {
-        busyRef.current = false;
-        setGlitching(false);
-      }
-    },
-    [runStaticSwap, slides.length],
-  );
-
   useEffect(() => {
     abortRef.current?.abort();
     const controller = new AbortController();
     abortRef.current = controller;
 
-    if (reducedMotion || paused || slides.length < 2) {
+    if (slides.length < 2) {
       return () => controller.abort();
     }
 
@@ -106,24 +93,31 @@ export function AboutTerminal() {
       try {
         while (!controller.signal.aborted) {
           await wait(HOLD_MS, controller.signal);
-          if (busyRef.current) {
-            continue;
+
+          while (busyRef.current && !controller.signal.aborted) {
+            await wait(80, controller.signal);
           }
+
+          if (controller.signal.aborted) {
+            break;
+          }
+
           const next = (indexRef.current + 1) % slides.length;
           await runStaticSwap(next, controller.signal);
         }
       } catch {
-        /* abort esperado ao pausar / desmontar */
+        /* abort esperado ao desmontar / trocar idioma */
       }
     };
 
     void loop();
     return () => controller.abort();
-  }, [paused, reducedMotion, runStaticSwap, slides.length, t.about.terminal]);
+  }, [runStaticSwap, slides.length, t.about.terminal]);
 
   useEffect(() => {
     setIndex(0);
     setGlitching(false);
+    busyRef.current = false;
   }, [t.about.terminal]);
 
   const slide = slides[index] ?? slides[0];
@@ -140,17 +134,6 @@ export function AboutTerminal() {
       aria-roledescription="carousel"
       aria-label={t.about.outdoorLabel}
       aria-live="polite"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocusCapture={() => setPaused(true)}
-      onBlurCapture={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-          setPaused(false);
-        }
-      }}
-      onPointerDown={() => {
-        void goTo((indexRef.current + 1) % slides.length);
-      }}
     >
       <div className="terminal-outdoor__bezel" aria-hidden>
         <span className="terminal-outdoor__led" />
@@ -179,30 +162,17 @@ export function AboutTerminal() {
         </div>
       </div>
 
-      <div className="terminal-outdoor__footer">
-        <div
-          className="terminal-outdoor__dots"
-          role="tablist"
-          aria-label={t.about.outdoorLabel}
-        >
+      <div className="terminal-outdoor__footer" aria-hidden>
+        <div className="terminal-outdoor__dots">
           {slides.map((item, dotIndex) => (
-            <button
+            <span
               key={`${item.command}-${dotIndex}`}
-              type="button"
-              role="tab"
-              aria-selected={dotIndex === index}
-              aria-label={`${dotIndex + 1}/${slides.length}`}
               className={`terminal-outdoor__dot${
                 dotIndex === index ? " is-active" : ""
               }`}
-              onClick={(event) => {
-                event.stopPropagation();
-                void goTo(dotIndex);
-              }}
             />
           ))}
         </div>
-        <p className="terminal-outdoor__hint">{t.about.outdoorHint}</p>
       </div>
     </div>
   );
