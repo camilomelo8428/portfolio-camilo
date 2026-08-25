@@ -50,7 +50,7 @@ export function CyberAudioProvider({ children }: { children: ReactNode }) {
     }
   }, [canUseAudio]);
 
-  // Som inicia ativo: no primeiro toque/clique destrava e toca o tema.
+  // Som ativo por padrao: destrava tema no primeiro gesto do usuario.
   useEffect(() => {
     if (!canUseAudio || !enabled || themeStartedRef.current) {
       return;
@@ -64,9 +64,23 @@ export function CyberAudioProvider({ children }: { children: ReactNode }) {
       void cyberAudio.unlock().then(() => cyberAudio.startTheme());
     };
 
-    document.addEventListener("pointerdown", resumeTheme, { once: true });
+    const events: Array<keyof DocumentEventMap> = [
+      "pointerdown",
+      "keydown",
+      "touchstart",
+    ];
+
+    events.forEach((eventName) => {
+      document.addEventListener(eventName, resumeTheme, {
+        once: true,
+        passive: true,
+      });
+    });
+
     return () => {
-      document.removeEventListener("pointerdown", resumeTheme);
+      events.forEach((eventName) => {
+        document.removeEventListener(eventName, resumeTheme);
+      });
     };
   }, [canUseAudio, enabled]);
 

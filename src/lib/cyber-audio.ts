@@ -14,7 +14,7 @@ export type CyberSfx =
   | "memory"
   | "success";
 
-const STORAGE_KEY = "portfolio-cyber-audio-enabled-v2";
+const STORAGE_KEY = "portfolio-cyber-audio-enabled-v3";
 const THEME_SRC = assetUrl("/audio/memory-robot.mp3");
 const THEME_VOLUME = 0.1;
 const SFX_MASTER_VOLUME = 0.28;
@@ -28,7 +28,6 @@ export const SFX_INTERACTIVE_SELECTOR = [
   ".tech-tile",
   ".tech-filter",
   ".project-card__trigger",
-  ".audio-robot__toggle",
   ".audio-robot__fab",
   ".terminal-outdoor__dot",
   ".lang-switch",
