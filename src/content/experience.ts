@@ -1,36 +1,45 @@
 export const experience = [
   {
-    company: "AMASA — Amazônia Indústria Alimentícias",
-    role: "Gestor de TI / Desenvolvedor Full Stack",
-    period: "2025 – 2026 · Atual",
+    company: "AMASA - Amazônia Indústria Alimentícias",
+    role: "Gestor de TI / Full Stack",
+    period: "2024 — 2025 · Atual",
     bullets: [
-      "Promovido a Gestor de TI; liderança da área e entrega de sistemas em produção: Sensores AMASA, Frequência-amasa e JBFlexa Chat.",
-      "Infraestrutura Proxmox/Endian e sustentação do ERP Fortes com alta disponibilidade.",
+      "Promovido a Gestor de TI. Entreguei em produção: Sensores AMASA, Frequência-amasa e JBFlexa Chat. Gerenciei Proxmox/Endian, reduzindo custos de hardware e reforçando a segurança.",
+      "Desenvolvi IoT e full stack (Python/FastAPI/Flask, React/TypeScript, ESP32). Sustentei o ERP Fortes com alta disponibilidade e suporte à operação.",
     ],
   },
   {
-    company: "Solus IT",
-    role: "Analista de TI",
-    period: "2023 – 2024",
+    company: "RR CHEVROLET",
+    role: "Analista de Suporte",
+    period: "2023 — 2024",
     bullets: [
-      "Suporte técnico N1/N2: estações, rede, impressoras e sistemas corporativos; triagem e resolução de incidentes.",
-      "500+ chamados atendidos (−40% no tempo médio) e 300+ atendimentos remotos (95% sem deslocamento).",
+      "Resolvi 500+ incidentes técnicos, reduzindo o tempo médio de solução em 40% por meio de diagnóstico ágil e atuação preventiva.",
+      "Gerenciei e monitorei o sistema NBS, garantindo 99% de uptime. Realizei 300+ atendimentos remotos, solucionando 95% das demandas sem deslocamento.",
     ],
   },
   {
-    company: "W3 Solution",
+    company: "Rodneycom Tecnologia e Serviços",
     role: "Desenvolvedor Front-end",
-    period: "2018 – 2023",
+    period: "2018 — 2023",
     bullets: [
-      "Interfaces React/TypeScript em 12+ projetos; otimização de apps (3s → 0,8s) e manutenção de legados.",
+      "Desenvolvi interfaces responsivas com React e TypeScript, aumentando a performance em até 50% em 12+ projetos.",
+      "Otimizei 8 aplicações (carregamento de 3s para 0,8s) e mantive 12 projetos legados, elevando manutenibilidade e reduzindo bugs.",
     ],
   },
   {
-    company: "Eng Tec",
-    role: "Analista de TI / Programador",
-    period: "2015 – 2018",
+    company: "MASTERDADOS",
+    role: "Analista de Suporte/Desenvolvedor",
+    period: "2015 — 2018",
     bullets: [
-      "Controle de acesso, padronização de 50+ terminais e servidores de automação.",
+      "Otimizei sistemas de controle de acesso em 8 instalações, reduzindo 25% das falhas. Padronizei 50+ terminais e configurei 5 servidores de automação.",
+    ],
+  },
+  {
+    company: "WIFINET",
+    role: "Analista de Suporte",
+    period: "2013 — 2015",
+    bullets: [
+      "Atendi 1.000+ clientes, solucionando 90% das demandas de forma remota. Configurei 200+ ONUs e monitorei 300+ dispositivos com atuação preventiva.",
     ],
   },
 ] as const;
